@@ -215,6 +215,19 @@
   table.calc-tabla tr.mejor td{background:#fff6e0;}
   table.calc-tabla tr.mejor td:first-child{color:var(--gold-dark);}
   .calc-tabla-vacia{color:var(--gray);font-size:.82rem;padding:14px 0;text-align:center;}
+
+  /* ---------- Bono 4: lista de compras ---------- */
+  .b4-progreso{font-size:.85rem;font-weight:700;color:var(--gold-dark);margin-bottom:14px;}
+  .b4-grupo-titulo{font-weight:700;font-size:.8rem;color:var(--choco-soft);text-transform:uppercase;letter-spacing:.03em;margin:16px 0 8px;}
+  .b4-grupo-titulo:first-of-type{margin-top:0;}
+  .b4-lista{list-style:none;padding:0;margin:0;}
+  .b4-item{background:#fff;border:1px solid #f0e0c5;border-radius:10px;margin-bottom:8px;transition:background .15s ease;}
+  .b4-item label{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;font-size:.9rem;color:var(--choco);}
+  .b4-item input[type=checkbox]{width:19px;height:19px;flex-shrink:0;margin:0;accent-color:var(--gold-dark);}
+  .b4-item.marcado{background:var(--cream);border-color:#e6d7bf;}
+  .b4-item.marcado span{text-decoration:line-through;color:var(--gray);}
+  .b4-btn-limpiar{display:block;margin:18px auto 0;background:none;border:2px solid #e6d7bf;color:var(--choco-soft);border-radius:50px;padding:10px 20px;font-size:.82rem;font-weight:700;cursor:pointer;}
+  .b4-btn-limpiar:hover{border-color:var(--gold);color:var(--gold-dark);}
 </style>
 </head>
 <body>
@@ -400,12 +413,13 @@
 
     var tabs = document.createElement('div');
     tabs.className = 'tabs';
-    var nombresTabs = ['Recetario', 'Bono 1: Redes Sociales', 'Bono 2: Calculadora', 'Bono 3: Packaging'];
+    var nombresTabs = ['Recetario', 'Bono 1: Redes Sociales', 'Bono 2: Calculadora', 'Bono 3: Packaging', 'Bono 4: Lista de Compras'];
     var paneles = [
       armarRecetas(prod.recetas, fotos),
       armarBono1(prod.bono1),
       armarBono2(prod.rendimientos),
-      armarBono3(prod.bono3)
+      armarBono3(prod.bono3),
+      armarBono4(prod.recetas)
     ];
 
     nombresTabs.forEach(function(nombre, i){
@@ -909,6 +923,114 @@
     panel.appendChild(s4);
 
     return panel;
+  }
+
+  /*  Bono 4: lista de compras. Elegís qué receta vas a hacer y te arma el
+   *  checklist de ingredientes con cantidades para llevar al súper — vas
+   *  tildando lo que ya compraste y queda guardado en este mismo navegador,
+   *  así si cerrás y volvés a entrar seguís donde dejaste. */
+  function armarBono4(recetas){
+    var panel = document.createElement('div');
+    panel.className = 'panel';
+
+    var s = seccion('Lista de compras', 'Elegí qué receta vas a preparar y te armamos el checklist de ingredientes para llevar al súper. Andá tildando lo que ya compraste para no olvidarte de nada.');
+
+    var card = document.createElement('div');
+    card.className = 'calc-card';
+    var campoSelect = document.createElement('div');
+    campoSelect.className = 'calc-field';
+    var label = document.createElement('label');
+    label.textContent = 'Elegí una receta';
+    var select = document.createElement('select');
+    select.id = 'b4Receta';
+    recetas.forEach(function(r){
+      var opt = document.createElement('option');
+      opt.value = r.num;
+      opt.textContent = r.num + '. ' + r.title;
+      select.appendChild(opt);
+    });
+    campoSelect.appendChild(label);
+    campoSelect.appendChild(select);
+    card.appendChild(campoSelect);
+
+    var listaBox = document.createElement('div');
+    listaBox.id = 'b4Lista';
+    card.appendChild(listaBox);
+
+    var btnLimpiar = document.createElement('button');
+    btnLimpiar.type = 'button';
+    btnLimpiar.className = 'b4-btn-limpiar';
+    btnLimpiar.textContent = 'Destildar todo';
+    btnLimpiar.onclick = function(){
+      localStorage.removeItem('pdo_compras_' + select.value);
+      pintarListaCompras_(recetas, select.value, listaBox);
+    };
+    card.appendChild(btnLimpiar);
+
+    s.appendChild(card);
+    panel.appendChild(s);
+
+    select.onchange = function(){ pintarListaCompras_(recetas, select.value, listaBox); };
+    pintarListaCompras_(recetas, select.value, listaBox);
+
+    return panel;
+  }
+
+  function obtenerEstadoCompras_(num){
+    try { return JSON.parse(localStorage.getItem('pdo_compras_' + num) || '{}'); }
+    catch(err){ return {}; }
+  }
+
+  function guardarEstadoCompras_(num, estado){
+    try { localStorage.setItem('pdo_compras_' + num, JSON.stringify(estado)); } catch(err){}
+  }
+
+  function pintarListaCompras_(recetas, num, contenedor){
+    var receta = recetas.filter(function(r){ return String(r.num) === String(num); })[0];
+    if(!receta){ contenedor.innerHTML = ''; return; }
+
+    var estado = obtenerEstadoCompras_(num);
+    var totalItems = 0, marcados = 0;
+    var html = '';
+
+    receta.ingredients.forEach(function(grupo, gi){
+      var titulo = grupo[0], items = grupo[1];
+      if(titulo) html += '<p class="b4-grupo-titulo">'+escapeHtml(titulo)+'</p>';
+      html += '<ul class="b4-lista">';
+      items.forEach(function(item, ii){
+        var key = gi + '_' + ii;
+        var marcado = !!estado[key];
+        totalItems++;
+        if(marcado) marcados++;
+        html +=
+          '<li class="b4-item'+(marcado ? ' marcado' : '')+'">' +
+            '<label>' +
+              '<input type="checkbox" data-key="'+key+'"'+(marcado ? ' checked' : '')+' onchange="marcarItemCompra_(\''+num+'\', this)">' +
+              '<span>'+escapeHtml(item)+'</span>' +
+            '</label>' +
+          '</li>';
+      });
+      html += '</ul>';
+    });
+
+    contenedor.innerHTML = '<div class="b4-progreso">'+marcados+' de '+totalItems+' comprados</div>' + html;
+  }
+
+  function marcarItemCompra_(num, checkbox){
+    var estado = obtenerEstadoCompras_(num);
+    var key = checkbox.getAttribute('data-key');
+    if(checkbox.checked) estado[key] = true; else delete estado[key];
+    guardarEstadoCompras_(num, estado);
+
+    var li = checkbox.closest('li');
+    if(li) li.classList.toggle('marcado', checkbox.checked);
+
+    var contenedor = document.getElementById('b4Lista');
+    if(!contenedor) return;
+    var total = contenedor.querySelectorAll('input[type=checkbox]').length;
+    var hechos = contenedor.querySelectorAll('input[type=checkbox]:checked').length;
+    var progreso = contenedor.querySelector('.b4-progreso');
+    if(progreso) progreso.textContent = hechos + ' de ' + total + ' comprados';
   }
 
   function seccion(titulo, intro){
