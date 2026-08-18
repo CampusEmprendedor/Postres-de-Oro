@@ -33,6 +33,8 @@
   .btn-logout{background:none;box-shadow:none;color:var(--gray);font-weight:600;font-size:.85rem;width:auto;display:inline-block;padding:8px 0;text-decoration:underline;}
   .error{background:#fdecec;color:#a33;border:1px solid #f3c6c6;border-radius:10px;padding:12px 14px;font-size:.88rem;margin-bottom:16px;display:none;}
   .error.visible{display:block;}
+  .error.ok{background:#eafaf0;color:#1a7a45;border-color:#c8ecd6;}
+  .link-olvide{display:block;text-align:center;margin-top:16px;font-size:.85rem;color:var(--gold-dark);text-decoration:underline;cursor:pointer;}
   .loading{text-align:center;color:var(--gray);padding:30px 0;}
 
   /* ---- cuenta ---- */
@@ -176,6 +178,7 @@
   .calc-presets{display:flex;gap:6px;margin-top:8px;}
   .calc-preset-btn{flex:1;padding:6px 4px;border-radius:8px;border:1px solid #e6d7bf;background:#fff;color:var(--choco-soft);font-size:.75rem;font-weight:700;cursor:pointer;}
   .calc-preset-btn.activo{background:var(--gold);border-color:var(--gold);color:#2a1a10;}
+  .calc-help{font-size:.74rem;color:var(--gray);margin-top:6px;line-height:1.3;}
   .calc-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
   .calc-results > *:last-child{grid-column:1 / -1;}
   @media(max-width:520px){.calc-results{grid-template-columns:1fr 1fr;}}
@@ -204,13 +207,24 @@
 
   <div id="vistaLogin" class="card">
     <h1>Mi cuenta</h1>
-    <p class="lead">Entrá con el email y la contraseña que recibiste por mail al comprar.</p>
-    <div id="errorLogin" class="error"></div>
-    <label for="email">Email</label>
-    <input type="email" id="email" autocomplete="username" placeholder="tu@email.com">
-    <label for="password">Contraseña</label>
-    <input type="password" id="password" autocomplete="current-password" placeholder="••••••••">
-    <button class="btn" id="btnLogin" onclick="iniciarSesion()">Ingresar</button>
+    <div id="bloqueLogin">
+      <p class="lead">Entrá con el email y la contraseña que recibiste por mail al comprar.</p>
+      <div id="errorLogin" class="error"></div>
+      <label for="email">Email</label>
+      <input type="email" id="email" autocomplete="username" placeholder="tu@email.com">
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" autocomplete="current-password" placeholder="••••••••">
+      <button class="btn" id="btnLogin" onclick="iniciarSesion()">Ingresar</button>
+      <a href="#" class="link-olvide" onclick="mostrarRecuperar(event)">¿Olvidaste tu contraseña?</a>
+    </div>
+    <div id="panelRecuperar" style="display:none;">
+      <p class="lead">Ingresá el email con el que compraste y te mandamos una contraseña nueva.</p>
+      <div id="msgRecuperar" class="error"></div>
+      <label for="emailRecuperar">Email</label>
+      <input type="email" id="emailRecuperar" autocomplete="username" placeholder="tu@email.com">
+      <button class="btn" id="btnRecuperar" onclick="enviarRecuperacion()">Enviar contraseña nueva</button>
+      <a href="#" class="link-olvide" onclick="ocultarRecuperar(event)">Volver a iniciar sesión</a>
+    </div>
   </div>
 
   <div id="vistaCuenta" style="display:none;">
@@ -262,6 +276,50 @@
     localStorage.removeItem('pdo_token');
     localStorage.removeItem('pdo_email');
     location.reload();
+  }
+
+  function mostrarRecuperar(ev){
+    if(ev) ev.preventDefault();
+    var emailActual = document.getElementById('email').value.trim();
+    document.getElementById('emailRecuperar').value = emailActual;
+    var msg = document.getElementById('msgRecuperar');
+    msg.classList.remove('visible', 'ok');
+    document.getElementById('bloqueLogin').style.display = 'none';
+    document.getElementById('panelRecuperar').style.display = 'block';
+  }
+
+  function ocultarRecuperar(ev){
+    if(ev) ev.preventDefault();
+    document.getElementById('panelRecuperar').style.display = 'none';
+    document.getElementById('bloqueLogin').style.display = 'block';
+  }
+
+  function enviarRecuperacion(){
+    var email = document.getElementById('emailRecuperar').value.trim();
+    var msg = document.getElementById('msgRecuperar');
+    msg.classList.remove('ok');
+
+    if(!email){
+      msg.textContent = 'Ingresá tu email.';
+      msg.classList.add('visible');
+      return;
+    }
+
+    var btn = document.getElementById('btnRecuperar');
+    btn.disabled = true; btn.textContent = 'Enviando...';
+
+    fetch(SCRIPT_URL + '?action=recuperar', { method: 'POST', body: JSON.stringify({email: email}) })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        btn.disabled = false; btn.textContent = 'Enviar contraseña nueva';
+        msg.textContent = (data && data.mensaje) || 'Si el email está registrado, te llegó un mail con una contraseña nueva.';
+        msg.classList.add('visible', 'ok');
+      })
+      .catch(function(){
+        btn.disabled = false; btn.textContent = 'Enviar contraseña nueva';
+        msg.textContent = 'No se pudo conectar. Probá de nuevo en un momento.';
+        msg.classList.add('visible');
+      });
   }
 
   // Nombre e ícono cortos para el selector de arriba. Los productos nuevos que
@@ -506,7 +564,7 @@
   function armarBono2(rendimientos){
     var panel = document.createElement('div');
     panel.className = 'panel';
-    var s = seccion('Calculadora de costos y precios', 'Elegí una receta, cargá cuánto gastaste en ingredientes y el margen que querés ganar. El precio de venta y la ganancia se calculan solos, y tu lista de precios se va armando abajo a medida que cargás cada una.');
+    var s = seccion('Calculadora de costos y precios', 'Elegí una receta, cargá cuánto gastaste en ingredientes, tus horas de trabajo y el margen que querés ganar. El precio de venta y la ganancia se calculan solos, y tu lista de precios se va armando abajo a medida que cargás cada una.');
 
     var datos = calcCargarDatos(); // { "<num>": {costo, margen} }
 
@@ -533,7 +591,19 @@
           '</div>' +
         '</div>' +
       '</div>' +
+      '<div class="calc-field-row">' +
+        '<div class="calc-field">' +
+          '<label>Horas de trabajo (toda la tanda)</label>' +
+          '<div class="calc-input-wrap"><input type="number" class="calc-horas" min="0" step="0.5" placeholder="Ej: 2"><span>hs</span></div>' +
+        '</div>' +
+        '<div class="calc-field">' +
+          '<label>Valor de tu hora</label>' +
+          '<div class="calc-input-wrap"><span>$</span><input type="number" class="calc-valorhora" min="0" placeholder="Ej: 2000"></div>' +
+          '<div class="calc-help">Así el precio final ya incluye pagarte a vos misma por tu tiempo, no solo los ingredientes.</div>' +
+        '</div>' +
+      '</div>' +
       '<div class="calc-results">' +
+        '<div class="calc-result-box"><span class="calc-result-label">Mano de obra (total tanda)</span><span class="calc-result-value calc-out-manoobra">$0</span></div>' +
         '<div class="calc-result-box"><span class="calc-result-label">Costo por porción / unidad</span><span class="calc-result-value calc-out-costounidad">$0</span></div>' +
         '<div class="calc-result-box destacado"><span class="calc-result-label">Precio de venta sugerido (c/u)</span><span class="calc-result-value calc-out-precio">$0</span></div>' +
         '<div class="calc-result-box destacado calc-box-entero"><span class="calc-result-label calc-label-entero">Precio si la vendés entera</span><span class="calc-result-value calc-out-precioentero">$0</span></div>' +
@@ -557,6 +627,9 @@
     var select = card.querySelector('.calc-select');
     var costoInput = card.querySelector('.calc-costo');
     var margenInput = card.querySelector('.calc-margen');
+    var horasInput = card.querySelector('.calc-horas');
+    var valorHoraInput = card.querySelector('.calc-valorhora');
+    var outManoObra = card.querySelector('.calc-out-manoobra');
     var outCostoUnidad = card.querySelector('.calc-out-costounidad');
     var outPrecio = card.querySelector('.calc-out-precio');
     var outPrecioEntero = card.querySelector('.calc-out-precioentero');
@@ -614,10 +687,12 @@
       var mejorNum = null, mejorGanancia = -Infinity;
       Object.keys(datos).forEach(function(num){
         var d = datos[num];
-        if (!d || !(d.costo > 0)) return;
+        if (!d) return;
+        var costoTotal = (d.costo||0) + (d.horas||0) * (d.valorHora||0);
+        if (!(costoTotal > 0)) return;
         var rr = rendimientos.filter(function(x){ return String(x.num) === String(num); })[0];
         if (!rr) return;
-        var cu = rr.rendimiento > 0 ? d.costo / rr.rendimiento : 0;
+        var cu = rr.rendimiento > 0 ? costoTotal / rr.rendimiento : 0;
         var ps = Math.round((cu * (1 + (d.margen||0)/100)) / 50) * 50;
         var gu = ps - cu;
         if (gu > mejorGanancia) { mejorGanancia = gu; mejorNum = num; }
@@ -632,12 +707,17 @@
       if (!r) return;
       var costo = parseFloat(costoInput.value) || 0;
       var margen = parseFloat(margenInput.value) || 0;
-      var costoUnidad = r.rendimiento > 0 ? costo / r.rendimiento : 0;
+      var horas = parseFloat(horasInput.value) || 0;
+      var valorHora = parseFloat(valorHoraInput.value) || 0;
+      var manoObra = horas * valorHora;
+      var costoTotal = costo + manoObra;
+      var costoUnidad = r.rendimiento > 0 ? costoTotal / r.rendimiento : 0;
       var precioSugerido = Math.round((costoUnidad * (1 + margen/100)) / 50) * 50;
       var precioEntero = precioSugerido * r.rendimiento;
       var gananciaUnidad = precioSugerido - costoUnidad;
       var gananciaTotal = gananciaUnidad * r.rendimiento;
 
+      outManoObra.textContent = '$' + Math.round(manoObra).toLocaleString('es-AR');
       outCostoUnidad.textContent = '$' + Math.round(costoUnidad).toLocaleString('es-AR');
       outPrecio.textContent = '$' + precioSugerido.toLocaleString('es-AR');
       outPrecioEntero.textContent = '$' + Math.round(precioEntero).toLocaleString('es-AR');
@@ -648,10 +728,10 @@
       actualizarPresets();
 
       if (guardar) {
-        datos[r.num] = { costo: costo, margen: margen };
+        datos[r.num] = { costo: costo, margen: margen, horas: horas, valorHora: valorHora };
         calcGuardarDatos(datos);
       }
-      actualizarFilaTabla(r, { costoUnidad: costoUnidad, precioSugerido: precioSugerido, gananciaUnidad: gananciaUnidad, costo: costo });
+      actualizarFilaTabla(r, { costoUnidad: costoUnidad, precioSugerido: precioSugerido, gananciaUnidad: gananciaUnidad, costo: costoTotal });
     }
 
     function cargarReceta(){
@@ -660,12 +740,16 @@
       var guardado = datos[r.num];
       costoInput.value = guardado ? guardado.costo : '';
       margenInput.value = guardado ? guardado.margen : 150;
+      horasInput.value = (guardado && guardado.horas) ? guardado.horas : '';
+      valorHoraInput.value = (guardado && guardado.valorHora) ? guardado.valorHora : '';
       recalcular(false);
     }
 
     select.addEventListener('change', cargarReceta);
     costoInput.addEventListener('input', function(){ recalcular(true); });
     margenInput.addEventListener('input', function(){ recalcular(true); });
+    horasInput.addEventListener('input', function(){ recalcular(true); });
+    valorHoraInput.addEventListener('input', function(){ recalcular(true); });
     presetBtns.forEach(function(b){
       b.addEventListener('click', function(){
         margenInput.value = b.getAttribute('data-val');
@@ -678,10 +762,11 @@
       var r = rendimientos.filter(function(x){ return String(x.num) === String(num); })[0];
       var d = datos[num];
       if (!r || !d) return;
-      var costoUnidad = r.rendimiento > 0 ? d.costo / r.rendimiento : 0;
+      var costoTotal = (d.costo||0) + (d.horas||0) * (d.valorHora||0);
+      var costoUnidad = r.rendimiento > 0 ? costoTotal / r.rendimiento : 0;
       var precioSugerido = Math.round((costoUnidad * (1 + (d.margen||0)/100)) / 50) * 50;
       var gananciaUnidad = precioSugerido - costoUnidad;
-      actualizarFilaTabla(r, { costoUnidad: costoUnidad, precioSugerido: precioSugerido, gananciaUnidad: gananciaUnidad, costo: d.costo });
+      actualizarFilaTabla(r, { costoUnidad: costoUnidad, precioSugerido: precioSugerido, gananciaUnidad: gananciaUnidad, costo: costoTotal });
     });
 
     cargarReceta();
