@@ -419,11 +419,15 @@
   }
 
   /* ---------- Logos / medios de pago ---------- */
-  .payment-badges{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px;}
-  .payment-badges span{
-    background:#f5ede0;color:var(--choco-soft);font-size:.74rem;font-weight:700;
-    padding:6px 12px;border-radius:8px;border:1px solid #e6d5bb;
+  .payment-badges{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .pay-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#fff;color:var(--choco-soft);font-size:.74rem;font-weight:700;
+    padding:6px 12px;border-radius:8px;border:1px solid #e6d5bb;box-shadow:0 1px 3px rgba(58,35,24,.06);
   }
+  .pay-badge svg{display:block;flex-shrink:0;}
+  .pay-mp{background:#eaf8ff;border-color:#bfe9fb;color:#0072a3;}
+  .pay-cuotas{background:#f5ede0;}
 
   /* ---------- Caja "recuperás tu inversión" ---------- */
   .roi-box{
@@ -433,9 +437,15 @@
 
   /* ---------- Contador de cupos ---------- */
   .cupos-counter{
-    text-align:center;font-size:.9rem;font-weight:700;color:#c0392b;margin-bottom:18px;
+    text-align:center;font-size:.9rem;font-weight:700;color:#c0392b;margin-bottom:10px;
   }
   .cupos-counter span{background:#fde3df;padding:5px 12px;border-radius:20px;}
+  .cupos-bar-wrap{
+    max-width:320px;margin:0 auto 18px;background:#f3d9d4;border-radius:20px;height:10px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.15);
+  }
+  .cupos-bar-fill{
+    height:100%;border-radius:20px;background:linear-gradient(90deg,var(--cta),#c0392b);width:30%;transition:width 1s ease;
+  }
 
   /* ---------- Testimonios estilo WhatsApp (cinta que se desplaza sola) ---------- */
   .wsp-marquee-wrap{
@@ -961,7 +971,8 @@
       <span class="scarcity-badge">🔥 OFERTA LIMITADA</span>
     </div>
     <div class="live-viewers"><span class="live-dot"></span> <span id="liveViewersCount">27</span> personas viendo esta página ahora</div>
-    <div class="cupos-counter"><span>⚡ Quedan <span id="cuposCount">7</span> cupos a este precio</span></div>
+    <div class="cupos-counter"><span>⚡ Quedan <span id="cuposCount">7</span> de <span id="cuposTotal">10</span> cupos a este precio</span></div>
+    <div class="cupos-bar-wrap"><div class="cupos-bar-fill" id="cuposBarFill"></div></div>
     <div class="offer-box">
       <span class="offer-badge">🔥 Oferta por tiempo limitado</span>
       <div class="price-old">Antes $45.500 ARS</div>
@@ -979,7 +990,22 @@
       <p class="payment-note">Pago único o hasta en 3 cuotas sin interés · Tarjeta o débito</p>
       <p class="payment-note">🔒 Pago 100% seguro, procesado por Mercado Pago</p>
       <div class="payment-badges">
-        <span>Mercado Pago</span><span>Visa</span><span>Mastercard</span><span>Débito</span><span>3 cuotas sin interés</span>
+        <span class="pay-badge pay-mp">
+          <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="#00B1EA"/><path d="M7 13.3c1 1.7 2.9 2.7 5 2.7s4-1 5-2.7" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none"/><circle cx="8.6" cy="9.8" r="1.1" fill="#fff"/><circle cx="15.4" cy="9.8" r="1.1" fill="#fff"/></svg>
+          Mercado Pago
+        </span>
+        <span class="pay-badge pay-visa">
+          <svg viewBox="0 0 32 20" width="30" height="19" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="20" rx="3" fill="#1A1F71"/><text x="16" y="14.5" font-family="Arial, Helvetica, sans-serif" font-style="italic" font-weight="700" font-size="10" fill="#fff" text-anchor="middle">VISA</text></svg>
+        </span>
+        <span class="pay-badge pay-mc">
+          <svg viewBox="0 0 32 20" width="30" height="19" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="20" rx="3" fill="#fff" stroke="#e6d5bb" stroke-width="0.5"/><circle cx="13" cy="10" r="6" fill="#EB001B"/><circle cx="19" cy="10" r="6" fill="#F79E1B" fill-opacity="0.85"/></svg>
+          Mastercard
+        </span>
+        <span class="pay-badge pay-debito">
+          <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="#5c3a22" stroke-width="1.6"/><rect x="2" y="9" width="20" height="3" fill="#5c3a22"/></svg>
+          Débito
+        </span>
+        <span class="pay-badge pay-cuotas">3 cuotas sin interés</span>
       </div>
     </div>
     <div class="roi-box">"Con vender un solo postre de estas recetas ya recuperás lo que invertiste en el recetario completo."</div>
@@ -1202,15 +1228,25 @@
     setInterval(actualizar, 9000);
   })();
 
-  // Contador de "cupos" (baja de a poco, nunca por debajo de 4)
+  // Contador de "cupos" (baja de a poco, nunca por debajo de 4) + barra visual
   (function(){
     var el = document.getElementById('cuposCount');
+    var barFill = document.getElementById('cuposBarFill');
     if(!el) return;
+    var total = 10;
     var cupos = 7;
+    function actualizarBarra(){
+      if(!barFill) return;
+      var ocupados = total - cupos;
+      var pct = Math.round((ocupados / total) * 100);
+      barFill.style.width = pct + '%';
+    }
+    actualizarBarra();
     setInterval(function(){
       if(Math.random() < 0.35 && cupos > 4){
         cupos--;
         el.textContent = cupos;
+        actualizarBarra();
       }
     }, 25000);
   })();
