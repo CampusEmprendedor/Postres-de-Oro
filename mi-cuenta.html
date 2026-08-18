@@ -75,6 +75,20 @@
   .receta-body li{margin-bottom:4px;}
   .tip-box{background:#fff6e5;border:1px solid #f0d9a8;border-radius:10px;padding:10px 12px;font-size:.85rem;margin-top:10px;}
 
+  /* foto que sube el comprador */
+  .foto-usuario-box{background:var(--cream);border:1px solid #f0e0c5;border-radius:12px;padding:14px 16px;margin-top:16px;}
+  .foto-usuario-box h4{margin:0 0 2px;}
+  .foto-usuario-desc{font-size:.82rem;color:var(--gray);margin:2px 0 10px;}
+  .foto-usuario-preview{margin-bottom:10px;}
+  .foto-usuario-preview img{width:100%;max-width:280px;aspect-ratio:1/1;object-fit:cover;border-radius:10px;display:block;background:#fff;}
+  .foto-usuario-vacia{font-size:.82rem;color:var(--gray);font-style:italic;}
+  .btn-foto{display:inline-block;padding:10px 18px;border-radius:50px;font-weight:700;font-size:.85rem;text-align:center;cursor:pointer;border:2px solid var(--gold-dark);background:#fff;color:var(--gold-dark);}
+  .btn-foto:disabled{opacity:.6;cursor:default;}
+  .foto-usuario-msg{font-size:.8rem;margin-top:8px;display:none;}
+  .foto-usuario-msg.visible{display:block;}
+  .foto-usuario-msg.ok-msg{color:#1a7a45;}
+  .foto-usuario-msg.error-msg{color:#a33;}
+
   /* bonos genericos */
   .seccion{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:22px;margin-bottom:16px;}
   .seccion h2{font-size:1.05rem;color:var(--gold-dark);margin-bottom:14px;}
@@ -264,7 +278,7 @@
         if(!data.ok){ mostrarError(data.error || 'No se pudo iniciar sesión.'); return; }
         localStorage.setItem('pdo_token', data.token);
         localStorage.setItem('pdo_email', data.email);
-        mostrarCuenta(data.email, data.productos);
+        mostrarCuenta(data.email, data.productos, data.fotos);
       })
       .catch(function(){
         btn.disabled = false; btn.textContent = 'Ingresar';
@@ -330,7 +344,7 @@
     recetario_base: { nombre: 'Mis Recetas', icono: '🍰' }
   };
 
-  function mostrarCuenta(email, productos){
+  function mostrarCuenta(email, productos, fotos){
     localStorage.setItem('pdo_comprador', '1');
     document.getElementById('vistaLogin').style.display = 'none';
     document.getElementById('vistaCuenta').style.display = 'block';
@@ -373,20 +387,20 @@
       wrap.style.display = i === 0 ? '' : 'none';
       // Por ahora solo existe "recetario_base"; los productos nuevos que se
       // vayan sumando entran acá con su propio "if" (o un mapa id -> función).
-      if (prod.id === 'recetario_base') wrap.appendChild(armarRecetarioCompleto(prod));
+      if (prod.id === 'recetario_base') wrap.appendChild(armarRecetarioCompleto(prod, fotos));
       cont.appendChild(wrap);
       wraps.push(wrap);
     });
   }
 
-  function armarRecetarioCompleto(prod){
+  function armarRecetarioCompleto(prod, fotos){
     var wrap = document.createElement('div');
 
     var tabs = document.createElement('div');
     tabs.className = 'tabs';
     var nombresTabs = ['Recetario', 'Bono 1: Redes Sociales', 'Bono 2: Calculadora', 'Bono 3: Packaging'];
     var paneles = [
-      armarRecetas(prod.recetas),
+      armarRecetas(prod.recetas, fotos),
       armarBono1(prod.bono1),
       armarBono2(prod.rendimientos),
       armarBono3(prod.bono3)
@@ -410,7 +424,8 @@
     return wrap;
   }
 
-  function armarRecetas(recetas){
+  function armarRecetas(recetas, fotos){
+    fotos = fotos || {};
     var panel = document.createElement('div');
     panel.className = 'panel';
     recetas.forEach(function(r){
@@ -441,9 +456,44 @@
       });
 
       var pasosHtml = '<h4>Preparación</h4><ol>' + r.steps.map(function(s){ return '<li>'+escapeHtml(s)+'</li>'; }).join('') + '</ol>';
-      var tipHtml = r.tip ? '<div class="tip-box"><strong>Tip:</strong> '+escapeHtml(r.tip)+'</div>' : '';
 
-      body.innerHTML = fotoHtml + badgesHtml + ingHtml + pasosHtml + tipHtml;
+      // Compatible con recetas viejas (r.tip, un solo string) y con recetas
+      // ampliadas nuevas (r.tips, un array con varios consejos).
+      var tipsArr = (r.tips && r.tips.length) ? r.tips : (r.tip ? [r.tip] : []);
+      var tipHtml = '';
+      if (tipsArr.length === 1) {
+        tipHtml = '<div class="tip-box"><strong>Tip:</strong> '+escapeHtml(tipsArr[0])+'</div>';
+      } else if (tipsArr.length > 1) {
+        tipHtml = '<div class="tip-box"><strong>Tips:</strong><ul style="margin:6px 0 0;padding-left:18px;">' +
+          tipsArr.map(function(t){ return '<li style="margin-bottom:4px;">'+escapeHtml(t)+'</li>'; }).join('') +
+          '</ul></div>';
+      }
+
+      var sustHtml = '';
+      if (r.sustituciones && r.sustituciones.length) {
+        sustHtml = '<div class="tip-box" style="background:#eef6ff;border-color:#c7dff5;"><strong>Se puede cambiar:</strong><ul style="margin:6px 0 0;padding-left:18px;">' +
+          r.sustituciones.map(function(s){ return '<li style="margin-bottom:4px;">'+escapeHtml(s)+'</li>'; }).join('') +
+          '</ul></div>';
+      }
+
+      var fotoGuardada = fotos[r.num] || fotos[String(r.num)] || '';
+      var subeFotoHtml =
+        '<div class="foto-usuario-box" id="fotoBox-'+r.num+'">' +
+          '<h4>📸 Tu foto de esta receta</h4>' +
+          '<p class="foto-usuario-desc">Subí una foto de cómo te quedó — te va a quedar guardada acá para la próxima vez que entres.</p>' +
+          '<div class="foto-usuario-preview" id="fotoPreview-'+r.num+'">' +
+            (fotoGuardada
+              ? '<img src="'+fotoGuardada+'" alt="Tu foto de '+escapeHtml(r.title)+'">'
+              : '<span class="foto-usuario-vacia">Todavía no subiste ninguna foto.</span>') +
+          '</div>' +
+          '<input type="file" accept="image/*" capture="environment" id="fotoInput-'+r.num+'" style="display:none" onchange="manejarSeleccionFoto(event, '+r.num+')">' +
+          '<button type="button" class="btn-foto" id="fotoBtn-'+r.num+'" onclick="document.getElementById(\'fotoInput-'+r.num+'\').click()">' +
+            (fotoGuardada ? 'Cambiar foto' : 'Subir mi foto') +
+          '</button>' +
+          '<div class="foto-usuario-msg" id="fotoMsg-'+r.num+'"></div>' +
+        '</div>';
+
+      body.innerHTML = fotoHtml + badgesHtml + ingHtml + pasosHtml + tipHtml + sustHtml + subeFotoHtml;
       div.appendChild(body);
       panel.appendChild(div);
     });
@@ -890,6 +940,85 @@
     return div.innerHTML;
   }
 
+  // ---- Foto que sube el comprador (una por receta) ----
+
+  // Redimensiona y comprime la imagen en el navegador antes de mandarla, así
+  // la subida es rápida incluso con fotos de celular de varios MB.
+  function comprimirImagenABase64(file, callback){
+    var maxDim = 1400;
+    var calidad = 0.82;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var img = new Image();
+      img.onload = function(){
+        var w = img.width, h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
+          else { w = Math.round(w * maxDim / h); h = maxDim; }
+        }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        var dataUrl = canvas.toDataURL('image/jpeg', calidad);
+        callback(null, dataUrl.split(',')[1], 'image/jpeg');
+      };
+      img.onerror = function(){ callback('No se pudo leer la imagen. Probá con otra foto.'); };
+      img.src = ev.target.result;
+    };
+    reader.onerror = function(){ callback('No se pudo leer el archivo.'); };
+    reader.readAsDataURL(file);
+  }
+
+  function mostrarMsgFoto_(num, texto, esError){
+    var el = document.getElementById('fotoMsg-'+num);
+    if(!el) return;
+    el.textContent = texto;
+    el.className = 'foto-usuario-msg' + (texto ? ' visible' : '') + (esError ? ' error-msg' : ' ok-msg');
+  }
+
+  function manejarSeleccionFoto(ev, num){
+    var file = ev.target.files && ev.target.files[0];
+    if(!file) return;
+    if (!/^image\//.test(file.type)) {
+      mostrarMsgFoto_(num, 'Elegí un archivo de imagen (jpg, png, etc).', true);
+      return;
+    }
+
+    var btn = document.getElementById('fotoBtn-'+num);
+    var textoOriginal = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Subiendo...';
+    mostrarMsgFoto_(num, '', false);
+
+    comprimirImagenABase64(file, function(err, base64, mimeType){
+      if (err) {
+        btn.disabled = false; btn.textContent = textoOriginal;
+        mostrarMsgFoto_(num, err, true);
+        return;
+      }
+      var token = localStorage.getItem('pdo_token');
+      fetch(SCRIPT_URL + '?action=subirFoto', {
+        method: 'POST',
+        body: JSON.stringify({ token: token, num: num, imagen: base64, mimeType: mimeType })
+      })
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+          btn.disabled = false;
+          if(!data.ok){
+            btn.textContent = textoOriginal;
+            mostrarMsgFoto_(num, data.error || 'No se pudo subir la foto. Probá de nuevo.', true);
+            return;
+          }
+          btn.textContent = 'Cambiar foto';
+          document.getElementById('fotoPreview-'+num).innerHTML = '<img src="'+data.url+'" alt="Tu foto">';
+          mostrarMsgFoto_(num, '¡Listo! Tu foto quedó guardada.', false);
+        })
+        .catch(function(){
+          btn.disabled = false; btn.textContent = textoOriginal;
+          mostrarMsgFoto_(num, 'No se pudo conectar. Probá de nuevo en un momento.', true);
+        });
+    });
+  }
+
   // Si ya había una sesión guardada, entra directo sin pedir contraseña de nuevo
   (function intentarSesionGuardada(){
     var token = localStorage.getItem('pdo_token');
@@ -906,7 +1035,7 @@
           location.reload();
           return;
         }
-        mostrarCuenta(data.email, data.productos);
+        mostrarCuenta(data.email, data.productos, data.fotos);
       })
       .catch(function(){ location.reload(); });
   })();
