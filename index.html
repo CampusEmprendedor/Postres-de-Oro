@@ -415,6 +415,42 @@
     max-width:560px;margin:22px auto 0;background:#fff8f0;border-left:4px solid var(--gold);
     border-radius:10px;padding:18px 22px;text-align:center;font-style:italic;color:var(--choco-soft);font-size:.95rem;
   }
+
+  /* ---------- Contador de cupos ---------- */
+  .cupos-counter{
+    text-align:center;font-size:.9rem;font-weight:700;color:#c0392b;margin-bottom:18px;
+  }
+  .cupos-counter span{background:#fde3df;padding:5px 12px;border-radius:20px;}
+
+  /* ---------- Testimonios estilo WhatsApp ---------- */
+  .wsp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .wsp-card{background:#e5ddd0;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;}
+  .wsp-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .wsp-head .name{font-weight:700;font-size:.88rem;color:var(--choco);}
+  .wsp-head .loc{font-size:.76rem;color:var(--choco-soft);}
+  .wsp-stars{color:var(--gold-dark);font-size:.8rem;margin-top:1px;}
+  .wsp-bubble{background:#dcf8c6;border-radius:10px;border-top-left-radius:2px;padding:10px 12px;font-size:.86rem;
+    color:#1a2e1a;max-width:94%;box-shadow:0 1px 2px rgba(0,0,0,.1);line-height:1.4;position:relative;margin-bottom:8px;}
+  .wsp-bubble:last-child{margin-bottom:0;}
+  .wsp-bubble::after{content:'';position:absolute;top:0;left:-7px;width:0;height:0;border-style:solid;
+    border-width:0 8px 8px 0;border-color:transparent #dcf8c6 transparent transparent;}
+  .wsp-check{display:block;text-align:right;font-size:.68rem;color:#4a9c4a;margin-top:4px;}
+  @media(max-width:860px){ .wsp-grid{grid-template-columns:1fr 1fr;} }
+  @media(max-width:560px){ .wsp-grid{grid-template-columns:1fr;} }
+
+  /* ---------- Aviso "última compra" ---------- */
+  .toast-compra{
+    position:fixed;left:16px;bottom:16px;z-index:70;
+    background:#fff;border-radius:14px;box-shadow:0 12px 28px rgba(58,35,24,.22);
+    padding:12px 16px;display:flex;align-items:center;gap:12px;max-width:280px;
+    transform:translateY(140%);opacity:0;transition:transform .45s ease, opacity .45s ease;
+  }
+  .toast-compra.visible{transform:translateY(0);opacity:1;}
+  .toast-compra .avatar{width:36px;height:36px;font-size:.85rem;}
+  .toast-compra .txt{font-size:.8rem;color:var(--choco-soft);line-height:1.3;}
+  .toast-compra .txt strong{color:var(--choco);}
+  .toast-compra .time{font-size:.7rem;color:var(--gray);margin-top:2px;}
+  @media(max-width:560px){ .toast-compra{left:10px;right:10px;max-width:none;bottom:80px;} }
 </style>
 </head>
 <body>
@@ -641,21 +677,29 @@
 <section>
   <div class="container">
     <h2 class="section-title">Lo que cuentan quienes ya lo probaron</h2>
-    <div class="testimonial-grid">
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"Empecé haciendo alfajores para vender entre mis vecinas y en dos semanas ya tenía pedidos fijos todos los fines de semana. Las recetas son súper claras."</p>
-        <div class="testimonial-author"><div class="avatar">M</div><div><div class="name">Marisa G.</div><div class="loc">Rosario, Argentina</div></div></div>
+    <div class="wsp-grid">
+      <div class="wsp-card">
+        <div class="wsp-head">
+          <div class="avatar">M</div>
+          <div><div class="name">Marisa G.</div><div class="loc">Rosario, Argentina</div><div class="wsp-stars">★★★★★</div></div>
+        </div>
+        <div class="wsp-bubble">Empecé haciendo alfajores para vender entre mis vecinas y en dos semanas ya tenía pedidos fijos todos los fines de semana 🍰<span class="wsp-check">✓✓</span></div>
+        <div class="wsp-bubble">Las recetas son súper claras, gracias!<span class="wsp-check">✓✓</span></div>
       </div>
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"Nunca había vendido nada en mi vida. La guía de precios me ayudó muchísimo porque no tenía idea de cuánto cobrar sin perder plata."</p>
-        <div class="testimonial-author"><div class="avatar">L</div><div><div class="name">Laura P.</div><div class="loc">Córdoba, Argentina</div></div></div>
+      <div class="wsp-card">
+        <div class="wsp-head">
+          <div class="avatar">L</div>
+          <div><div class="name">Laura P.</div><div class="loc">Córdoba, Argentina</div><div class="wsp-stars">★★★★★</div></div>
+        </div>
+        <div class="wsp-bubble">Nunca había vendido nada en mi vida y la guía de precios me ayudó muchísimo, no tenía idea de cuánto cobrar sin perder plata 🙌<span class="wsp-check">✓✓</span></div>
       </div>
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"Lo compré por curiosidad y terminó siendo mi entrada extra todos los meses. Fácil de seguir hasta para alguien que no cocinaba mucho como yo."</p>
-        <div class="testimonial-author"><div class="avatar">C</div><div><div class="name">Carla D.</div><div class="loc">Mendoza, Argentina</div></div></div>
+      <div class="wsp-card">
+        <div class="wsp-head">
+          <div class="avatar">C</div>
+          <div><div class="name">Carla D.</div><div class="loc">Mendoza, Argentina</div><div class="wsp-stars">★★★★★</div></div>
+        </div>
+        <div class="wsp-bubble">Lo compré por curiosidad y terminó siendo mi entrada extra todos los meses 💰<span class="wsp-check">✓✓</span></div>
+        <div class="wsp-bubble">Fácil de seguir hasta para alguien que no cocinaba mucho como yo jaja<span class="wsp-check">✓✓</span></div>
       </div>
     </div>
     <div class="stats-row">
@@ -678,6 +722,7 @@
       <span class="scarcity-badge">⏳ ÚLTIMA OPORTUNIDAD</span>
     </div>
     <div class="live-viewers"><span class="live-dot"></span> <span id="liveViewersCount">27</span> personas viendo esta página ahora</div>
+    <div class="cupos-counter"><span>⚡ Quedan <span id="cuposCount">7</span> cupos a este precio</span></div>
     <div class="offer-box">
       <span class="offer-badge">🔥 Oferta por tiempo limitado</span>
       <div class="price-old">Antes $45.500 ARS</div>
@@ -692,10 +737,10 @@
         <li><span class="check">✓</span> Acceso inmediato y de por vida</li>
       </ul>
       <button type="button" class="btn btn-primary btn-wide" onclick="abrirModalCompra()">Quiero acceder ahora</button>
-      <p class="payment-note">Pago único · Sin suscripciones · Tarjeta, débito o efectivo</p>
+      <p class="payment-note">Pago único o hasta en 3 cuotas sin interés · Tarjeta, débito o efectivo</p>
       <p class="payment-note">🔒 Pago 100% seguro, procesado por Mercado Pago</p>
       <div class="payment-badges">
-        <span>Mercado Pago</span><span>Visa</span><span>Mastercard</span><span>Débito</span>
+        <span>Mercado Pago</span><span>Visa</span><span>Mastercard</span><span>Débito</span><span>3 cuotas sin interés</span>
       </div>
     </div>
     <div class="roi-box">"Con vender un solo postre de estas recetas ya recuperás lo que invertiste en el recetario completo."</div>
@@ -768,6 +813,14 @@
   </div>
 </footer>
 
+<div class="toast-compra" id="toastCompra">
+  <div class="avatar" id="toastAvatar">M</div>
+  <div class="txt">
+    <div><strong id="toastNombre">María G.</strong> de <span id="toastLugar">Rosario</span> acaba de comprar</div>
+    <div class="time" id="toastTiempo">hace 3 minutos</div>
+  </div>
+</div>
+
 <div class="sticky-buy" id="stickyBuy">
   <div class="info">
     <span class="old">$45.500 ARS</span>
@@ -776,18 +829,19 @@
   <button type="button" class="btn btn-primary" onclick="abrirModalCompra()">Comprar ahora</button>
 </div>
 
-<!-- Modal: pide nombre y ciudad antes de ir a pagar -->
+<!-- Modal: pide email y ubicación antes de ir a pagar. El email queda como usuario de la cuenta. -->
 <div class="modal-overlay" id="modalCompra">
   <div class="modal-box">
     <button type="button" class="modal-close" onclick="cerrarModalCompra()" aria-label="Cerrar">✕</button>
     <h3>Ya casi es tuyo 🍰</h3>
-    <p class="modal-sub">Contanos quién sos para armar tu cuenta, y te llevamos a pagar de forma segura con Mercado Pago.</p>
+    <p class="modal-sub">Con este email vas a entrar después a "Mi cuenta" para ver tus recetas. Te llevamos a pagar de forma segura con Mercado Pago.</p>
+    <div id="errorCompra" style="display:none;background:#fdecec;color:#a33;border:1px solid #f3c6c6;border-radius:10px;padding:12px 14px;font-size:.88rem;margin-bottom:16px;"></div>
     <form id="formCompra" onsubmit="return irAPagar(event)">
-      <label for="inputNombre">Nombre</label>
-      <input type="text" id="inputNombre" name="nombre" placeholder="Tu nombre" required>
-      <label for="inputCiudad">Ciudad</label>
-      <input type="text" id="inputCiudad" name="ciudad" placeholder="Tu ciudad" required>
-      <button type="submit" class="btn btn-primary">Ir a pagar →</button>
+      <label for="inputEmail">Email</label>
+      <input type="email" id="inputEmail" name="email" placeholder="tu@email.com" autocomplete="email" required>
+      <label for="inputUbicacion">Ubicación (ciudad y país)</label>
+      <input type="text" id="inputUbicacion" name="ubicacion" placeholder="Ej: Rosario, Argentina" required>
+      <button type="submit" class="btn btn-primary" id="btnIrAPagar">Ir a pagar →</button>
       <p class="modal-note">🔒 El pago lo hacés después, directo en Mercado Pago.</p>
     </form>
   </div>
@@ -817,7 +871,9 @@
 </script>
 
 <script>
-  var CHECKOUT_URL = "https://script.google.com/macros/s/AKfycbziRfaLJ5p2BbdzltNws4k5r4JzgIWMwAqDZp9ykdGiu_1ThoMDWOSInpPNMKVPPreA2g/exec";
+  // Pegá acá la misma URL de "Implementación web" que uses en mi-cuenta.html
+  // (Apps Script > Implementar > Nueva implementación > Aplicación web).
+  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2ZjP6Wv_q1iXYDsLfanK9DuUuebLMci0scrM9ZSfzzoMxnH8cmZ18GmysJfz-b2E/exec";
 
   function abrirModalCompra(){
     document.getElementById('modalCompra').classList.add('visible');
@@ -827,13 +883,41 @@
     document.getElementById('modalCompra').classList.remove('visible');
     document.body.style.overflow = '';
   }
+
+  function mostrarErrorCompra(msg){
+    var el = document.getElementById('errorCompra');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
   function irAPagar(ev){
     ev.preventDefault();
-    var nombre = document.getElementById('inputNombre').value.trim();
-    var ciudad = document.getElementById('inputCiudad').value.trim();
-    if(!nombre || !ciudad) return false;
-    var url = CHECKOUT_URL + '?comprar=1&nombre=' + encodeURIComponent(nombre) + '&ciudad=' + encodeURIComponent(ciudad);
-    window.open(url, '_blank', 'noopener,noreferrer');
+    var email = document.getElementById('inputEmail').value.trim();
+    var ubicacion = document.getElementById('inputUbicacion').value.trim();
+    if(!email || !ubicacion) return false;
+
+    var btn = document.getElementById('btnIrAPagar');
+    btn.disabled = true;
+    btn.textContent = 'Preparando el pago...';
+    document.getElementById('errorCompra').style.display = 'none';
+
+    fetch(SCRIPT_URL + '?action=comprar', { method: 'POST', body: JSON.stringify({ email: email, ubicacion: ubicacion }) })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(!data.ok){
+          btn.disabled = false;
+          btn.textContent = 'Ir a pagar →';
+          mostrarErrorCompra(data.error || 'No pudimos iniciar el pago. Probá de nuevo.');
+          return;
+        }
+        // Redirige a Mercado Pago en la misma pestaña (evita bloqueos de pop-up en el celular)
+        window.location.href = data.checkoutUrl;
+      })
+      .catch(function(){
+        btn.disabled = false;
+        btn.textContent = 'Ir a pagar →';
+        mostrarErrorCompra('No nos pudimos conectar. Probá de nuevo en un momento.');
+      });
     return false;
   }
   // Cerrar el modal si tocan fuera de la tarjeta
@@ -877,6 +961,53 @@
     }
     actualizar();
     setInterval(actualizar, 9000);
+  })();
+
+  // Contador de "cupos" (baja de a poco, nunca por debajo de 4)
+  (function(){
+    var el = document.getElementById('cuposCount');
+    if(!el) return;
+    var cupos = 7;
+    setInterval(function(){
+      if(Math.random() < 0.35 && cupos > 4){
+        cupos--;
+        el.textContent = cupos;
+      }
+    }, 25000);
+  })();
+
+  // Aviso flotante de "última compra"
+  (function(){
+    var toast = document.getElementById('toastCompra');
+    if(!toast) return;
+    var compras = [
+      { nombre: 'María G.', lugar: 'Rosario' },
+      { nombre: 'Laura P.', lugar: 'Córdoba' },
+      { nombre: 'Carla D.', lugar: 'Mendoza' },
+      { nombre: 'Sofía R.', lugar: 'Buenos Aires' },
+      { nombre: 'Valentina M.', lugar: 'Mar del Plata' },
+      { nombre: 'Julieta N.', lugar: 'Salta' }
+    ];
+    var tiempos = ['hace 2 minutos', 'hace 3 minutos', 'hace 5 minutos', 'hace 8 minutos', 'hace 1 minuto'];
+    var idx = 0;
+    var nombreEl = document.getElementById('toastNombre');
+    var lugarEl = document.getElementById('toastLugar');
+    var tiempoEl = document.getElementById('toastTiempo');
+    var avatarEl = document.getElementById('toastAvatar');
+
+    function mostrarToast(){
+      var c = compras[idx % compras.length];
+      idx++;
+      nombreEl.textContent = c.nombre;
+      lugarEl.textContent = c.lugar;
+      avatarEl.textContent = c.nombre.charAt(0);
+      tiempoEl.textContent = tiempos[Math.floor(Math.random() * tiempos.length)];
+      toast.classList.add('visible');
+      setTimeout(function(){ toast.classList.remove('visible'); }, 5500);
+    }
+
+    setTimeout(mostrarToast, 6000);
+    setInterval(mostrarToast, 21000);
   })();
 </script>
 
