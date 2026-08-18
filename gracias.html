@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>¡Gracias por tu compra! — Postres de Oro</title>
+<style>
+  :root{
+    --gold:#d4a24e;
+    --gold-dark:#b8842f;
+    --choco:#3a2318;
+    --choco-soft:#5a3c2a;
+    --cream:#fff8f0;
+    --pink:#e0668a;
+    --green:#2e8b57;
+    --gray:#6b6259;
+    --radius:16px;
+    --shadow:0 10px 30px rgba(58,35,24,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI',Arial,Helvetica,sans-serif;
+    background:linear-gradient(180deg,#fdf1de 0%, var(--cream) 45%);
+    color:var(--choco);
+    line-height:1.55;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{text-decoration:none;color:inherit;}
+  .container{max-width:720px;margin:0 auto;padding:48px 20px 70px;}
+  h1,h2{font-family:Georgia,'Times New Roman',serif;line-height:1.2;}
+
+  .check{
+    width:74px;height:74px;border-radius:50%;
+    background:linear-gradient(135deg,var(--green),#3fae6f);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 22px;box-shadow:0 8px 20px rgba(46,139,87,.35);
+  }
+  .check svg{width:36px;height:36px;}
+
+  h1{font-size:2rem;text-align:center;color:var(--choco);margin-bottom:10px;}
+  p.lead{text-align:center;color:var(--choco-soft);font-size:1.08rem;max-width:520px;margin:0 auto 38px;}
+
+  .card{
+    background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:30px 26px;margin-bottom:26px;
+  }
+  .card h2{font-size:1.2rem;color:var(--gold-dark);margin-bottom:18px;}
+
+  .download-item{
+    display:flex;align-items:center;gap:16px;
+    padding:16px;border-radius:12px;
+    background:var(--cream);border:1px solid #f0e0c5;
+    margin-bottom:12px;
+  }
+  .download-item:last-child{margin-bottom:0;}
+  .download-icon{
+    width:44px;height:44px;border-radius:10px;flex-shrink:0;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.3rem;
+  }
+  .download-info{flex:1;min-width:0;}
+  .download-info .title{font-weight:700;font-size:.98rem;color:var(--choco);}
+  .download-info .sub{font-size:.8rem;color:var(--gray);}
+  .download-btn{
+    flex-shrink:0;
+    padding:10px 18px;border-radius:50px;font-weight:700;font-size:.85rem;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    color:#2a1a10;box-shadow:0 6px 14px rgba(184,132,47,.35);
+    transition:transform .15s ease;
+  }
+  .download-btn:hover{transform:translateY(-2px);}
+
+  .note{
+    background:#fff6e5;border:1px solid #f0d9a8;border-radius:12px;
+    padding:16px 18px;font-size:.88rem;color:var(--choco-soft);text-align:center;
+    margin-bottom:26px;
+  }
+  .note strong{color:var(--gold-dark);}
+
+  footer{text-align:center;color:var(--gray);font-size:.82rem;padding-top:10px;}
+
+  @media(max-width:520px){
+    .download-item{flex-wrap:wrap;}
+    .download-btn{width:100%;text-align:center;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="check">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <h1>¡Gracias por tu compra!</h1>
+  <p class="lead">Tu pago fue aprobado. Te acabamos de mandar un email con tu usuario y contraseña — entrá a tu cuenta para ver el Recetario y tus 3 bonos.</p>
+
+  <div class="card">
+    <h2>Accedé a tus recetas</h2>
+    <p style="color:var(--choco-soft);font-size:.95rem;margin-bottom:20px;">
+      Por seguridad, el material se ve directamente desde tu cuenta personal — no se envía como archivo adjunto.
+      Revisá tu email (y la carpeta de spam, por las dudas) para ver tu contraseña.
+    </p>
+    <a class="download-btn" style="display:block;text-align:center;padding:16px;font-size:1rem;" href="mi-cuenta.html">Entrar a Mi Cuenta →</a>
+  </div>
+
+  <div class="note">
+    <strong>Guardá el link de esta cuenta.</strong> Vas a poder volver a entrar cuando quieras, y si comprás algún bono nuevo se va a habilitar automáticamente ahí.
+  </div>
+
+  <footer>Postres de Oro · Antonella Dominguez</footer>
+</div>
+<script>
+  localStorage.setItem('pdo_comprador', '1');
+</script>
+</body>
+</html>

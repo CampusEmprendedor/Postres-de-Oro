@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Mi cuenta — Postres de Oro</title>
+<style>
+  :root{
+    --gold:#d4a24e; --gold-dark:#b8842f; --choco:#3a2318; --choco-soft:#5a3c2a;
+    --cream:#fff8f0; --pink:#e0668a; --green:#2e8b57; --gray:#6b6259;
+    --radius:16px; --shadow:0 10px 30px rgba(58,35,24,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Segoe UI',Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#fdf1de 0%, var(--cream) 40%);color:var(--choco);line-height:1.55;min-height:100vh;-webkit-user-select:text;}
+  a{text-decoration:none;color:inherit;}
+  img,svg{max-width:100%;}
+  .container{max-width:820px;margin:0 auto;padding:30px 18px 70px;}
+  h1,h2,h3{font-family:Georgia,'Times New Roman',serif;line-height:1.25;}
+  .logo{font-family:Georgia,serif;font-weight:700;font-size:1.25rem;color:var(--gold-dark);text-align:center;margin-bottom:24px;}
+
+  /* ---- login ---- */
+  .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:34px 28px;}
+  h1{font-size:1.6rem;text-align:center;margin-bottom:6px;}
+  p.lead{text-align:center;color:var(--gray);font-size:.95rem;margin-bottom:26px;}
+  label{display:block;font-size:.85rem;font-weight:700;color:var(--choco-soft);margin-bottom:6px;}
+  input{width:100%;padding:13px 14px;border-radius:10px;border:1px solid #e6d7bd;font-size:1rem;margin-bottom:18px;font-family:inherit;}
+  input:focus{outline:2px solid var(--gold);border-color:transparent;}
+  .btn{display:block;width:100%;padding:15px;border-radius:50px;font-weight:700;font-size:1rem;text-align:center;cursor:pointer;border:none;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#2a1a10;box-shadow:0 8px 20px rgba(184,132,47,.35);transition:transform .15s ease;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn:disabled{opacity:.6;cursor:default;transform:none;}
+  .btn-logout{background:none;box-shadow:none;color:var(--gray);font-weight:600;font-size:.85rem;width:auto;display:inline-block;padding:8px 0;text-decoration:underline;}
+  .error{background:#fdecec;color:#a33;border:1px solid #f3c6c6;border-radius:10px;padding:12px 14px;font-size:.88rem;margin-bottom:16px;display:none;}
+  .error.visible{display:block;}
+  .loading{text-align:center;color:var(--gray);padding:30px 0;}
+
+  /* ---- cuenta ---- */
+  .top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+  .top-bar span{font-size:.85rem;color:var(--gray);}
+
+  .tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:20px;padding-bottom:4px;}
+  .tab{flex-shrink:0;padding:10px 16px;border-radius:50px;background:#fff;border:1px solid #e6d7bd;font-size:.82rem;font-weight:700;color:var(--choco-soft);cursor:pointer;white-space:nowrap;}
+  .tab.activo{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#2a1a10;border-color:transparent;}
+
+  .productos-caption{font-size:.7rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+  .productos-nav{display:flex;gap:10px;overflow-x:auto;margin-bottom:22px;padding-bottom:4px;}
+  .producto-btn{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:14px;background:#fff;border:2px solid #e6d7bd;font-size:.88rem;font-weight:700;color:var(--choco);cursor:pointer;white-space:nowrap;box-shadow:var(--shadow);}
+  .producto-btn .icono{font-size:1.15rem;}
+  .producto-btn.activo{background:var(--choco);border-color:var(--choco);color:var(--gold);}
+
+  .panel{display:none;}
+  .panel.activo{display:block;}
+
+  .aviso{font-size:.78rem;color:var(--gray);text-align:center;margin-top:26px;}
+
+  /* recetas */
+  .receta{background:#fff;border-radius:12px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
+  .receta-head{padding:12px 18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:12px;}
+  .receta-head .thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--cream);}
+  .receta-head .num{display:inline-block;width:26px;height:26px;border-radius:50%;background:var(--gold);color:#2a1a10;font-size:.75rem;font-weight:700;text-align:center;line-height:26px;flex-shrink:0;}
+  .receta-head h3{font-size:1rem;flex:1;}
+  .receta-head .flecha{color:var(--gray);transition:transform .2s ease;flex-shrink:0;}
+  .receta.abierta .flecha{transform:rotate(180deg);}
+  .receta-body{display:none;padding:0 18px 18px;}
+  .receta.abierta .receta-body{display:block;}
+  .receta-foto{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;margin-bottom:14px;display:block;background:var(--cream);}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+  .badge{font-size:.72rem;background:var(--cream);border:1px solid #f0e0c5;border-radius:20px;padding:4px 10px;color:var(--choco-soft);}
+  .receta-body h4{font-size:.85rem;color:var(--gold-dark);margin:12px 0 6px;}
+  .receta-body ul{padding-left:18px;font-size:.9rem;}
+  .receta-body ol{padding-left:18px;font-size:.9rem;}
+  .receta-body li{margin-bottom:4px;}
+  .tip-box{background:#fff6e5;border:1px solid #f0d9a8;border-radius:10px;padding:10px 12px;font-size:.85rem;margin-top:10px;}
+
+  /* bonos genericos */
+  .seccion{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:22px;margin-bottom:16px;}
+  .seccion h2{font-size:1.05rem;color:var(--gold-dark);margin-bottom:14px;}
+  .seccion p.intro{color:var(--choco-soft);font-size:.92rem;margin-bottom:16px;}
+  .lista-check{list-style:none;padding:0;}
+  .lista-check li{padding:8px 0 8px 28px;position:relative;font-size:.9rem;border-top:1px solid #f0e0c5;}
+  .lista-check li:first-child{border-top:none;}
+  .lista-check li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700;}
+  .item-titulo{font-weight:700;font-size:.9rem;margin-bottom:2px;}
+  .item-texto{font-size:.87rem;color:var(--choco-soft);}
+  .item-block{padding:10px 0;border-top:1px solid #f0e0c5;}
+  .item-block:first-child{border-top:none;}
+
+  /* ---------- Bono 1: material ilustrativo ---------- */
+  .b1-perfil-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.b1-perfil-grid{grid-template-columns:1fr;}}
+  .b1-perfil-card{background:var(--cream);border:1px solid #f0e0c5;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:flex-start;}
+  .b1-perfil-icon{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#2a1a10;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+  .b1-perfil-num{width:38px;height:38px;border-radius:50%;background:var(--choco);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;}
+  .b1-perfil-texto{font-size:.85rem;color:var(--choco-soft);line-height:1.4;padding-top:4px;}
+
+  .b1-calendario-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  @media(max-width:700px){.b1-calendario-row{grid-template-columns:1fr 1fr;}}
+  @media(max-width:420px){.b1-calendario-row{grid-template-columns:1fr;}}
+  .b1-dia-card{background:#fff;border:1px solid #f0e0c5;border-radius:12px;overflow:hidden;box-shadow:0 4px 10px rgba(58,35,24,.06);}
+  .b1-dia-top{padding:10px 14px;color:#fff;font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:space-between;}
+  .b1-dia-icon{font-size:1.5rem;text-align:center;padding:14px 0 4px;}
+  .b1-dia-texto{font-size:.8rem;color:var(--choco-soft);padding:0 14px 12px;text-align:center;line-height:1.35;}
+  .b1-dia-formato{display:block;margin:0 14px 14px;text-align:center;font-size:.68rem;font-weight:700;color:var(--gold-dark);background:var(--cream);border-radius:20px;padding:4px 8px;}
+
+  .b1-ideas-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.b1-ideas-grid{grid-template-columns:1fr;}}
+  .b1-idea-card{background:#fff;border:1px solid #f0e0c5;border-radius:12px;padding:14px;}
+  .b1-idea-icon{font-size:1.4rem;margin-bottom:6px;display:block;}
+  .b1-idea-titulo{font-weight:700;font-size:.87rem;margin-bottom:4px;color:var(--choco);}
+  .b1-idea-texto{font-size:.82rem;color:var(--choco-soft);line-height:1.4;}
+
+  .b1-chat{background:#e5ddd0;border-radius:14px;padding:18px;}
+  .b1-bubble-wrap{margin-bottom:16px;}
+  .b1-bubble-wrap:last-child{margin-bottom:0;}
+  .b1-bubble-titulo{font-size:.72rem;font-weight:700;color:var(--choco-soft);margin-bottom:4px;padding-left:4px;}
+  .b1-bubble{background:#dcf8c6;border-radius:10px;border-top-left-radius:2px;padding:10px 12px;font-size:.85rem;color:#1a2e1a;max-width:88%;box-shadow:0 1px 2px rgba(0,0,0,.1);line-height:1.4;position:relative;}
+  .b1-bubble::after{content:'';position:absolute;top:0;left:-7px;width:0;height:0;border-style:solid;border-width:0 8px 8px 0;border-color:transparent #dcf8c6 transparent transparent;}
+  .b1-bubble-check{display:block;text-align:right;font-size:.68rem;color:#4a9c4a;margin-top:4px;}
+
+  .b1-fotos-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.b1-fotos-grid{grid-template-columns:1fr;}}
+  .b1-foto-card{background:var(--cream);border:1px solid #f0e0c5;border-radius:12px;padding:14px;text-align:center;}
+  .b1-foto-icon{font-size:1.6rem;display:block;margin-bottom:6px;}
+  .b1-foto-titulo{font-weight:700;font-size:.85rem;color:var(--choco);margin-bottom:4px;}
+  .b1-foto-texto{font-size:.8rem;color:var(--choco-soft);line-height:1.4;}
+
+  /* ---------- Bono 3: material ilustrativo ---------- */
+  .b3-check-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.b3-check-grid{grid-template-columns:1fr;}}
+  .b3-check-card{background:var(--cream);border:1px solid #f0e0c5;border-radius:12px;padding:14px;display:flex;gap:12px;align-items:flex-start;}
+  .b3-check-icon{width:38px;height:38px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0;}
+  .b3-check-texto{font-size:.85rem;color:var(--choco-soft);line-height:1.4;padding-top:4px;}
+
+  .b3-mat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:640px){.b3-mat-grid{grid-template-columns:1fr;}}
+  .b3-mat-card{background:#fff;border:1px solid #f0e0c5;border-radius:12px;padding:14px;}
+  .b3-mat-icon{font-size:1.5rem;display:block;margin-bottom:6px;}
+  .b3-mat-nombre{font-weight:700;font-size:.87rem;color:var(--choco);margin-bottom:4px;}
+  .b3-mat-uso{font-size:.82rem;color:var(--choco-soft);margin-bottom:8px;line-height:1.4;}
+  .b3-mat-donde{display:inline-block;font-size:.68rem;font-weight:700;color:var(--gold-dark);background:var(--cream);border-radius:20px;padding:4px 10px;}
+
+  .b3-pres-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.b3-pres-grid{grid-template-columns:1fr;}}
+  .b3-pres-card{background:var(--cream);border:1px solid #f0e0c5;border-radius:12px;padding:14px;}
+  .b3-pres-icon{font-size:1.4rem;display:block;margin-bottom:6px;}
+  .b3-pres-titulo{font-weight:700;font-size:.87rem;color:var(--choco);margin-bottom:4px;}
+  .b3-pres-texto{font-size:.82rem;color:var(--choco-soft);line-height:1.4;}
+
+  .b3-tarjeta-grid{display:grid;grid-template-columns:1fr;gap:16px;}
+  .b3-tarjeta-mock{
+    position:relative;background:#fffdf8;border:2px dashed var(--gold);border-radius:14px;
+    padding:20px 22px;
+  }
+  .b3-tarjeta-ribbon{position:absolute;top:-12px;left:18px;background:var(--gold);color:#2a1a10;font-size:.68rem;font-weight:700;padding:4px 12px;border-radius:20px;box-shadow:0 3px 6px rgba(58,35,24,.15);}
+  .b3-tarjeta-titulo{font-size:.75rem;font-weight:700;color:var(--choco-soft);margin-bottom:8px;margin-top:6px;}
+  .b3-tarjeta-texto{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:.95rem;color:var(--choco);line-height:1.5;}
+  table{width:100%;border-collapse:collapse;font-size:.82rem;}
+  table th{text-align:left;background:var(--cream);padding:8px;font-size:.75rem;color:var(--choco-soft);}
+  table td{padding:8px;border-top:1px solid #f0e0c5;vertical-align:top;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:520px){.grid2{grid-template-columns:1fr;}}
+
+  /* calculadora */
+  .calc-card{background:var(--cream);border:1px solid #f0e0c5;border-radius:14px;padding:20px;margin-bottom:22px;}
+  .calc-field{margin-bottom:16px;}
+  .calc-field label{display:block;font-size:.78rem;font-weight:700;color:var(--choco-soft);margin-bottom:6px;}
+  .calc-field select{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #e6d7bf;font-size:.9rem;font-family:inherit;color:var(--choco);background:#fff;}
+  .calc-field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:520px){.calc-field-row{grid-template-columns:1fr;}}
+  .calc-input-wrap{display:flex;align-items:center;background:#fff;border:1px solid #e6d7bf;border-radius:10px;padding:0 12px;}
+  .calc-input-wrap span{color:var(--gray);font-size:.85rem;}
+  .calc-input-wrap input{border:none;background:none;padding:12px 6px;font-size:.95rem;font-family:inherit;color:var(--choco);width:100%;}
+  .calc-input-wrap input:focus{outline:none;}
+  .calc-input-wrap:focus-within{border-color:var(--gold);}
+  .calc-presets{display:flex;gap:6px;margin-top:8px;}
+  .calc-preset-btn{flex:1;padding:6px 4px;border-radius:8px;border:1px solid #e6d7bf;background:#fff;color:var(--choco-soft);font-size:.75rem;font-weight:700;cursor:pointer;}
+  .calc-preset-btn.activo{background:var(--gold);border-color:var(--gold);color:#2a1a10;}
+  .calc-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;}
+  .calc-results > *:last-child{grid-column:1 / -1;}
+  @media(max-width:520px){.calc-results{grid-template-columns:1fr 1fr;}}
+  .calc-result-box{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #f0e0c5;}
+  .calc-result-box.destacado{background:var(--choco);border-color:var(--choco);}
+  .calc-result-label{display:block;font-size:.68rem;color:var(--gray);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px;}
+  .calc-result-box.destacado .calc-result-label{color:#d8c4ae;}
+  .calc-result-value{font-size:1.15rem;font-weight:700;color:var(--gold-dark);}
+  .calc-result-box.destacado .calc-result-value{color:var(--gold);font-size:1.3rem;}
+  .calc-tabla-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:4px;}
+  .calc-tabla-header h4{font-size:.95rem;color:var(--choco);}
+  .calc-tabla-header span{font-size:.75rem;color:var(--gray);}
+  .calc-tabla-wrap{overflow-x:auto;}
+  table.calc-tabla{width:100%;border-collapse:collapse;font-size:.8rem;}
+  table.calc-tabla th{text-align:left;background:var(--cream);padding:8px 10px;font-size:.7rem;color:var(--choco-soft);white-space:nowrap;}
+  table.calc-tabla td{padding:8px 10px;border-top:1px solid #f0e0c5;white-space:nowrap;}
+  table.calc-tabla td:first-child{white-space:normal;font-weight:600;}
+  table.calc-tabla tr.mejor td{background:#fff6e0;}
+  table.calc-tabla tr.mejor td:first-child{color:var(--gold-dark);}
+  .calc-tabla-vacia{color:var(--gray);font-size:.82rem;padding:14px 0;text-align:center;}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">🍰 Postres de Oro</div>
+
+  <div id="vistaLogin" class="card">
+    <h1>Mi cuenta</h1>
+    <p class="lead">Entrá con el email y la contraseña que recibiste por mail al comprar.</p>
+    <div id="errorLogin" class="error"></div>
+    <label for="email">Email</label>
+    <input type="email" id="email" autocomplete="username" placeholder="tu@email.com">
+    <label for="password">Contraseña</label>
+    <input type="password" id="password" autocomplete="current-password" placeholder="••••••••">
+    <button class="btn" id="btnLogin" onclick="iniciarSesion()">Ingresar</button>
+  </div>
+
+  <div id="vistaCuenta" style="display:none;">
+    <div class="top-bar">
+      <span id="emailActual"></span>
+      <button class="btn btn-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+    <div id="contenido"></div>
+    <p class="aviso">Este material es de uso personal. Por favor no lo compartas ni lo redistribuyas — así podemos seguir manteniendo precios accesibles.</p>
+  </div>
+</div>
+
+<script>
+  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbziRfaLJ5p2BbdzltNws4k5r4JzgIWMwAqDZp9ykdGiu_1ThoMDWOSInpPNMKVPPreA2g/exec";
+  var IMG_BASE = "img/recetas/";
+
+  function mostrarError(msg){
+    var el = document.getElementById('errorLogin');
+    el.textContent = msg;
+    el.classList.add('visible');
+  }
+
+  function iniciarSesion(){
+    var email = document.getElementById('email').value.trim();
+    var password = document.getElementById('password').value;
+    if(!email || !password){ mostrarError('Completá email y contraseña.'); return; }
+
+    var btn = document.getElementById('btnLogin');
+    btn.disabled = true; btn.textContent = 'Ingresando...';
+
+    fetch(SCRIPT_URL + '?action=login', { method: 'POST', body: JSON.stringify({email: email, password: password}) })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        btn.disabled = false; btn.textContent = 'Ingresar';
+        if(!data.ok){ mostrarError(data.error || 'No se pudo iniciar sesión.'); return; }
+        localStorage.setItem('pdo_token', data.token);
+        localStorage.setItem('pdo_email', data.email);
+        mostrarCuenta(data.email, data.productos);
+      })
+      .catch(function(){
+        btn.disabled = false; btn.textContent = 'Ingresar';
+        mostrarError('No se pudo conectar. Probá de nuevo en un momento.');
+      });
+  }
+
+  function cerrarSesion(){
+    localStorage.removeItem('pdo_token');
+    localStorage.removeItem('pdo_email');
+    location.reload();
+  }
+
+  // Nombre e ícono cortos para el selector de arriba. Los productos nuevos que
+  // no estén acá van a usar su nombre completo y un ícono genérico — así, a
+  // medida que vayas comprando más cosas, cada una aparece como una opción
+  // más en esta misma fila, sin tocar el resto del código.
+  var PRODUCTO_NAV_INFO = {
+    recetario_base: { nombre: 'Mis Recetas', icono: '🍰' }
+  };
+
+  function mostrarCuenta(email, productos){
+    localStorage.setItem('pdo_comprador', '1');
+    document.getElementById('vistaLogin').style.display = 'none';
+    document.getElementById('vistaCuenta').style.display = 'block';
+    document.getElementById('emailActual').textContent = email;
+
+    var cont = document.getElementById('contenido');
+    cont.innerHTML = '';
+
+    if(!productos || productos.length === 0){
+      cont.innerHTML = '<p style="text-align:center;color:var(--gray);">Todavía no tenés productos habilitados.</p>';
+      return;
+    }
+
+    var caption = document.createElement('div');
+    caption.className = 'productos-caption';
+    caption.textContent = 'Tus productos';
+    cont.appendChild(caption);
+
+    var nav = document.createElement('div');
+    nav.className = 'productos-nav';
+    cont.appendChild(nav);
+
+    var wraps = [];
+
+    productos.forEach(function(prod, i){
+      var info = PRODUCTO_NAV_INFO[prod.id] || { nombre: prod.nombre, icono: '📦' };
+
+      var btn = document.createElement('div');
+      btn.className = 'producto-btn' + (i === 0 ? ' activo' : '');
+      btn.innerHTML = '<span class="icono">' + info.icono + '</span><span>' + escapeHtml(info.nombre) + '</span>';
+      btn.onclick = function(){
+        nav.querySelectorAll('.producto-btn').forEach(function(b){ b.classList.remove('activo'); });
+        btn.classList.add('activo');
+        wraps.forEach(function(w){ w.style.display = 'none'; });
+        wraps[i].style.display = '';
+      };
+      nav.appendChild(btn);
+
+      var wrap = document.createElement('div');
+      wrap.style.display = i === 0 ? '' : 'none';
+      // Por ahora solo existe "recetario_base"; los productos nuevos que se
+      // vayan sumando entran acá con su propio "if" (o un mapa id -> función).
+      if (prod.id === 'recetario_base') wrap.appendChild(armarRecetarioCompleto(prod));
+      cont.appendChild(wrap);
+      wraps.push(wrap);
+    });
+  }
+
+  function armarRecetarioCompleto(prod){
+    var wrap = document.createElement('div');
+
+    var tabs = document.createElement('div');
+    tabs.className = 'tabs';
+    var nombresTabs = ['Recetario', 'Bono 1: Redes Sociales', 'Bono 2: Calculadora', 'Bono 3: Packaging'];
+    var paneles = [
+      armarRecetas(prod.recetas),
+      armarBono1(prod.bono1),
+      armarBono2(prod.rendimientos),
+      armarBono3(prod.bono3)
+    ];
+
+    nombresTabs.forEach(function(nombre, i){
+      var tab = document.createElement('div');
+      tab.className = 'tab' + (i===0 ? ' activo' : '');
+      tab.textContent = nombre;
+      tab.onclick = function(){
+        tabs.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('activo'); });
+        tab.classList.add('activo');
+        paneles.forEach(function(p){ p.classList.remove('activo'); });
+        paneles[i].classList.add('activo');
+      };
+      tabs.appendChild(tab);
+    });
+
+    wrap.appendChild(tabs);
+    paneles.forEach(function(p, i){ if(i===0) p.classList.add('activo'); wrap.appendChild(p); });
+    return wrap;
+  }
+
+  function armarRecetas(recetas){
+    var panel = document.createElement('div');
+    panel.className = 'panel';
+    recetas.forEach(function(r){
+      var div = document.createElement('div');
+      div.className = 'receta';
+
+      var numStr = String(r.num).padStart(2, '0');
+      var fotoUrl = IMG_BASE + numStr + '.jpg';
+
+      var head = document.createElement('div');
+      head.className = 'receta-head';
+      head.innerHTML = '<img class="thumb" src="'+fotoUrl+'" alt="" loading="lazy" onerror="this.style.display=\'none\'"><span class="num">' + r.num + '</span><h3>' + escapeHtml(r.title) + '</h3><span class="flecha">▾</span>';
+      head.onclick = function(){ div.classList.toggle('abierta'); };
+      div.appendChild(head);
+
+      var body = document.createElement('div');
+      body.className = 'receta-body';
+
+      var fotoHtml = '<img class="receta-foto" src="'+fotoUrl+'" alt="Foto de '+escapeHtml(r.title)+'" loading="lazy" onerror="this.style.display=\'none\'">';
+
+      var badgesHtml = '<div class="badges">' + r.badges.map(function(b){ return '<span class="badge">'+escapeHtml(b)+'</span>'; }).join('') + '</div>';
+
+      var ingHtml = '<h4>Ingredientes</h4>';
+      r.ingredients.forEach(function(grupo){
+        var titulo = grupo[0], items = grupo[1];
+        if(titulo) ingHtml += '<p style="font-weight:600;font-size:.85rem;margin-top:8px;">'+escapeHtml(titulo)+'</p>';
+        ingHtml += '<ul>' + items.map(function(it){ return '<li>'+escapeHtml(it)+'</li>'; }).join('') + '</ul>';
+      });
+
+      var pasosHtml = '<h4>Preparación</h4><ol>' + r.steps.map(function(s){ return '<li>'+escapeHtml(s)+'</li>'; }).join('') + '</ol>';
+      var tipHtml = r.tip ? '<div class="tip-box"><strong>Tip:</strong> '+escapeHtml(r.tip)+'</div>' : '';
+
+      body.innerHTML = fotoHtml + badgesHtml + ingHtml + pasosHtml + tipHtml;
+      div.appendChild(body);
+      panel.appendChild(div);
+    });
+    return panel;
+  }
+
+  var B1_PERFIL_ICONS = ['🏷️','💬','🖼️','📝','📸','⚡'];
+  var B1_DIA_COLOR = { 'Lunes':'#d4a24e', 'Miércoles':'#e0668a', 'Viernes':'#3a2318', 'Domingo':'#2e8b57' };
+  var B1_DIA_ICONO = { 'Lunes':'🎂', 'Miércoles':'🎬', 'Viernes':'📣', 'Domingo':'🙌' };
+  var B1_IDEAS_ICONS = ['🎂','🔄','💬','❓','🎬','🔥','💡','🎁','📊','🙏'];
+  var B1_FOTOS_ICONS = ['☀️','🔍','🧺','📐','🍰','🚫'];
+
+  function b1FormatoIcono(formato){
+    if(/historia/i.test(formato)) return '📱';
+    if(/foto/i.test(formato)) return '📸';
+    return '✨';
+  }
+
+  function armarBono1(b){
+    var panel = document.createElement('div');
+    panel.className = 'panel';
+
+    // --- 1. Armá tu perfil: tarjetas con ícono ---
+    var s1 = seccion('Antes de publicar: armá tu perfil', b.intro);
+    var perfilGrid = document.createElement('div');
+    perfilGrid.className = 'b1-perfil-grid';
+    b.perfil.forEach(function(texto, i){
+      var card = document.createElement('div');
+      card.className = 'b1-perfil-card';
+      card.innerHTML =
+        '<div class="b1-perfil-icon">'+(B1_PERFIL_ICONS[i] || '✓')+'</div>' +
+        '<div class="b1-perfil-texto">'+escapeHtml(texto)+'</div>';
+      perfilGrid.appendChild(card);
+    });
+    s1.appendChild(perfilGrid);
+    panel.appendChild(s1);
+
+    // --- 2. Calendario semanal: tarjetas tipo "día" ---
+    var s2 = seccion('Calendario de contenido semanal', 'Un plan simple de 4 publicaciones por semana, para no tener que pensar qué subir cada día.');
+    var calRow = document.createElement('div');
+    calRow.className = 'b1-calendario-row';
+    b.calendario.forEach(function(c){
+      var color = B1_DIA_COLOR[c.dia] || 'var(--gold)';
+      var icono = B1_DIA_ICONO[c.dia] || '📅';
+      var card = document.createElement('div');
+      card.className = 'b1-dia-card';
+      card.innerHTML =
+        '<div class="b1-dia-top" style="background:'+color+';">' +
+          '<span>'+escapeHtml(c.dia)+'</span><span>'+b1FormatoIcono(c.formato)+'</span>' +
+        '</div>' +
+        '<div class="b1-dia-icon">'+icono+'</div>' +
+        '<div class="b1-dia-texto">'+escapeHtml(c.que)+'</div>' +
+        '<span class="b1-dia-formato">'+escapeHtml(c.formato)+'</span>';
+      calRow.appendChild(card);
+    });
+    s2.appendChild(calRow);
+    panel.appendChild(s2);
+
+    // --- 3. 10 ideas: tarjetas con ícono ---
+    var s3 = seccion('10 ideas de publicaciones que funcionan', '');
+    var ideasGrid = document.createElement('div');
+    ideasGrid.className = 'b1-ideas-grid';
+    b.ideas.forEach(function(idea, i){
+      var card = document.createElement('div');
+      card.className = 'b1-idea-card';
+      card.innerHTML =
+        '<span class="b1-idea-icon">'+(B1_IDEAS_ICONS[i] || '💡')+'</span>' +
+        '<div class="b1-idea-titulo">'+escapeHtml(idea.titulo)+'</div>' +
+        '<div class="b1-idea-texto">'+escapeHtml(idea.texto)+'</div>';
+      ideasGrid.appendChild(card);
+    });
+    s3.appendChild(ideasGrid);
+    panel.appendChild(s3);
+
+    // --- 4. Mensajes: simulación de chat de WhatsApp ---
+    var s4 = seccion('Mensajes listos para WhatsApp', 'Copiá y pegá, o adaptalos a tu manera de hablar.');
+    var chat = document.createElement('div');
+    chat.className = 'b1-chat';
+    b.mensajes.forEach(function(m){
+      var wrap = document.createElement('div');
+      wrap.className = 'b1-bubble-wrap';
+      wrap.innerHTML =
+        '<div class="b1-bubble-titulo">'+escapeHtml(m.titulo)+'</div>' +
+        '<div class="b1-bubble">'+escapeHtml(m.texto)+'<span class="b1-bubble-check">✓✓</span></div>';
+      chat.appendChild(wrap);
+    });
+    s4.appendChild(chat);
+    panel.appendChild(s4);
+
+    // --- 5. Tips de fotos: tarjetas con ícono ---
+    var s5 = seccion('Tips para sacar mejores fotos con el celular', '');
+    var fotosGrid = document.createElement('div');
+    fotosGrid.className = 'b1-fotos-grid';
+    b.fotos.forEach(function(f, i){
+      var card = document.createElement('div');
+      card.className = 'b1-foto-card';
+      card.innerHTML =
+        '<span class="b1-foto-icon">'+(B1_FOTOS_ICONS[i] || '📷')+'</span>' +
+        '<div class="b1-foto-titulo">'+escapeHtml(f.titulo)+'</div>' +
+        '<div class="b1-foto-texto">'+escapeHtml(f.texto)+'</div>';
+      fotosGrid.appendChild(card);
+    });
+    s5.appendChild(fotosGrid);
+    panel.appendChild(s5);
+
+    return panel;
+  }
+
+  function calcCargarDatos(){
+    try {
+      return JSON.parse(localStorage.getItem('pdo_calc_datos') || '{}');
+    } catch(err){ return {}; }
+  }
+  function calcGuardarDatos(datos){
+    try { localStorage.setItem('pdo_calc_datos', JSON.stringify(datos)); } catch(err){}
+  }
+
+  function armarBono2(rendimientos){
+    var panel = document.createElement('div');
+    panel.className = 'panel';
+    var s = seccion('Calculadora de costos y precios', 'Elegí una receta, cargá cuánto gastaste en ingredientes y el margen que querés ganar. El precio de venta y la ganancia se calculan solos, y tu lista de precios se va armando abajo a medida que cargás cada una.');
+
+    var datos = calcCargarDatos(); // { "<num>": {costo, margen} }
+
+    // --- Tarjeta de cálculo ---
+    var card = document.createElement('div');
+    card.className = 'calc-card';
+    card.innerHTML =
+      '<div class="calc-field">' +
+        '<label>Elegí una receta</label>' +
+        '<select class="calc-select"></select>' +
+      '</div>' +
+      '<div class="calc-field-row">' +
+        '<div class="calc-field">' +
+          '<label>Costo total de ingredientes</label>' +
+          '<div class="calc-input-wrap"><span>$</span><input type="number" class="calc-costo" min="0" placeholder="0"></div>' +
+        '</div>' +
+        '<div class="calc-field">' +
+          '<label>Margen de ganancia</label>' +
+          '<div class="calc-input-wrap"><input type="number" class="calc-margen" value="150"><span>%</span></div>' +
+          '<div class="calc-presets">' +
+            '<button type="button" class="calc-preset-btn" data-val="100">100%</button>' +
+            '<button type="button" class="calc-preset-btn" data-val="150">150%</button>' +
+            '<button type="button" class="calc-preset-btn" data-val="200">200%</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="calc-results">' +
+        '<div class="calc-result-box"><span class="calc-result-label">Costo por porción / unidad</span><span class="calc-result-value calc-out-costounidad">$0</span></div>' +
+        '<div class="calc-result-box destacado"><span class="calc-result-label">Precio de venta sugerido (c/u)</span><span class="calc-result-value calc-out-precio">$0</span></div>' +
+        '<div class="calc-result-box destacado calc-box-entero"><span class="calc-result-label calc-label-entero">Precio si la vendés entera</span><span class="calc-result-value calc-out-precioentero">$0</span></div>' +
+        '<div class="calc-result-box"><span class="calc-result-label">Ganancia por porción / unidad</span><span class="calc-result-value calc-out-gananciaunidad">$0</span></div>' +
+        '<div class="calc-result-box"><span class="calc-result-label">Ganancia total de la tanda</span><span class="calc-result-value calc-out-gananciatotal">$0</span></div>' +
+      '</div>';
+    s.appendChild(card);
+
+    // --- Tabla resumen ---
+    var tablaWrap = document.createElement('div');
+    tablaWrap.className = 'calc-tabla-wrap';
+    tablaWrap.innerHTML =
+      '<div class="calc-tabla-header"><h4>Tu lista de precios</h4><span>Se arma sola con cada receta que cargues arriba</span></div>' +
+      '<div class="calc-tabla-vacia">Todavía no cargaste ninguna receta. Elegí una arriba para empezar.</div>' +
+      '<table class="calc-tabla" style="display:none;">' +
+        '<thead><tr><th>Receta</th><th>Costo unid.</th><th>Precio sugerido</th><th>Ganancia unid.</th></tr></thead>' +
+        '<tbody></tbody>' +
+      '</table>';
+    s.appendChild(tablaWrap);
+
+    var select = card.querySelector('.calc-select');
+    var costoInput = card.querySelector('.calc-costo');
+    var margenInput = card.querySelector('.calc-margen');
+    var outCostoUnidad = card.querySelector('.calc-out-costounidad');
+    var outPrecio = card.querySelector('.calc-out-precio');
+    var outPrecioEntero = card.querySelector('.calc-out-precioentero');
+    var labelEntero = card.querySelector('.calc-label-entero');
+    var outGananciaUnidad = card.querySelector('.calc-out-gananciaunidad');
+    var outGananciaTotal = card.querySelector('.calc-out-gananciatotal');
+    var presetBtns = card.querySelectorAll('.calc-preset-btn');
+    var tabla = tablaWrap.querySelector('table');
+    var tbody = tablaWrap.querySelector('tbody');
+    var vacia = tablaWrap.querySelector('.calc-tabla-vacia');
+
+    rendimientos.forEach(function(r){
+      var opt = document.createElement('option');
+      opt.value = r.num;
+      opt.textContent = r.num + '. ' + r.nombre + ' (rinde ' + r.rendimiento + ')';
+      select.appendChild(opt);
+    });
+
+    function recetaActual(){
+      var num = select.value;
+      return rendimientos.filter(function(r){ return String(r.num) === String(num); })[0];
+    }
+
+    function actualizarPresets(){
+      var val = margenInput.value;
+      presetBtns.forEach(function(b){
+        b.classList.toggle('activo', b.getAttribute('data-val') === val);
+      });
+    }
+
+    function actualizarFilaTabla(r, calc){
+      var fila = tbody.querySelector('tr[data-num="'+r.num+'"]');
+      var tieneDatos = calc.costo > 0;
+
+      if (!tieneDatos) {
+        if (fila) fila.remove();
+      } else {
+        if (!fila) {
+          fila = document.createElement('tr');
+          fila.setAttribute('data-num', r.num);
+          tbody.appendChild(fila);
+        }
+        fila.innerHTML =
+          '<td>' + r.num + '. ' + escapeHtml(r.nombre) + '</td>' +
+          '<td>$' + Math.round(calc.costoUnidad).toLocaleString('es-AR') + '</td>' +
+          '<td>$' + calc.precioSugerido.toLocaleString('es-AR') + '</td>' +
+          '<td>$' + Math.round(calc.gananciaUnidad).toLocaleString('es-AR') + '</td>';
+      }
+
+      var filas = tbody.querySelectorAll('tr');
+      tabla.style.display = filas.length ? '' : 'none';
+      vacia.style.display = filas.length ? 'none' : '';
+
+      // Resaltar la receta con mayor ganancia por unidad
+      var mejorNum = null, mejorGanancia = -Infinity;
+      Object.keys(datos).forEach(function(num){
+        var d = datos[num];
+        if (!d || !(d.costo > 0)) return;
+        var rr = rendimientos.filter(function(x){ return String(x.num) === String(num); })[0];
+        if (!rr) return;
+        var cu = rr.rendimiento > 0 ? d.costo / rr.rendimiento : 0;
+        var ps = Math.round((cu * (1 + (d.margen||0)/100)) / 50) * 50;
+        var gu = ps - cu;
+        if (gu > mejorGanancia) { mejorGanancia = gu; mejorNum = num; }
+      });
+      tbody.querySelectorAll('tr').forEach(function(tr){
+        tr.classList.toggle('mejor', mejorNum && tr.getAttribute('data-num') === mejorNum);
+      });
+    }
+
+    function recalcular(guardar){
+      var r = recetaActual();
+      if (!r) return;
+      var costo = parseFloat(costoInput.value) || 0;
+      var margen = parseFloat(margenInput.value) || 0;
+      var costoUnidad = r.rendimiento > 0 ? costo / r.rendimiento : 0;
+      var precioSugerido = Math.round((costoUnidad * (1 + margen/100)) / 50) * 50;
+      var precioEntero = precioSugerido * r.rendimiento;
+      var gananciaUnidad = precioSugerido - costoUnidad;
+      var gananciaTotal = gananciaUnidad * r.rendimiento;
+
+      outCostoUnidad.textContent = '$' + Math.round(costoUnidad).toLocaleString('es-AR');
+      outPrecio.textContent = '$' + precioSugerido.toLocaleString('es-AR');
+      outPrecioEntero.textContent = '$' + Math.round(precioEntero).toLocaleString('es-AR');
+      labelEntero.textContent = 'Precio de toda la tanda (' + r.rendimiento + (r.rendimiento === 1 ? ' unidad)' : ' unidades)');
+      outGananciaUnidad.textContent = '$' + Math.round(gananciaUnidad).toLocaleString('es-AR');
+      outGananciaTotal.textContent = '$' + Math.round(gananciaTotal).toLocaleString('es-AR');
+
+      actualizarPresets();
+
+      if (guardar) {
+        datos[r.num] = { costo: costo, margen: margen };
+        calcGuardarDatos(datos);
+      }
+      actualizarFilaTabla(r, { costoUnidad: costoUnidad, precioSugerido: precioSugerido, gananciaUnidad: gananciaUnidad, costo: costo });
+    }
+
+    function cargarReceta(){
+      var r = recetaActual();
+      if (!r) return;
+      var guardado = datos[r.num];
+      costoInput.value = guardado ? guardado.costo : '';
+      margenInput.value = guardado ? guardado.margen : 150;
+      recalcular(false);
+    }
+
+    select.addEventListener('change', cargarReceta);
+    costoInput.addEventListener('input', function(){ recalcular(true); });
+    margenInput.addEventListener('input', function(){ recalcular(true); });
+    presetBtns.forEach(function(b){
+      b.addEventListener('click', function(){
+        margenInput.value = b.getAttribute('data-val');
+        recalcular(true);
+      });
+    });
+
+    // Pintar filas ya guardadas de sesiones anteriores
+    Object.keys(datos).forEach(function(num){
+      var r = rendimientos.filter(function(x){ return String(x.num) === String(num); })[0];
+      var d = datos[num];
+      if (!r || !d) return;
+      var costoUnidad = r.rendimiento > 0 ? d.costo / r.rendimiento : 0;
+      var precioSugerido = Math.round((costoUnidad * (1 + (d.margen||0)/100)) / 50) * 50;
+      var gananciaUnidad = precioSugerido - costoUnidad;
+      actualizarFilaTabla(r, { costoUnidad: costoUnidad, precioSugerido: precioSugerido, gananciaUnidad: gananciaUnidad, costo: d.costo });
+    });
+
+    cargarReceta();
+
+    panel.appendChild(s);
+    return panel;
+  }
+
+  var B3_CHECK_ICONS = ['🌡️','🧼','📦','🛡️','🔒','🏷️','⚠️','📸'];
+  var B3_MAT_ICONS = ['📦','🛍️','🥤','🎀','🏷️','💌'];
+  var B3_PRES_ICONS = ['🎂','🍮','🍬','🥤','🍪','🎉'];
+  var B3_TARJETA_ETIQUETA = ['Para pegar en la caja', 'Con los datos del producto', 'Para pedir una reseña'];
+
+  function armarBono3(b){
+    var panel = document.createElement('div');
+    panel.className = 'panel';
+
+    // --- 1. Checklist: tarjetas con ícono ---
+    var s1 = seccion('Checklist antes de entregar un pedido', b.intro);
+    var checkGrid = document.createElement('div');
+    checkGrid.className = 'b3-check-grid';
+    b.checklist.forEach(function(texto, i){
+      var card = document.createElement('div');
+      card.className = 'b3-check-card';
+      card.innerHTML =
+        '<div class="b3-check-icon">'+(B3_CHECK_ICONS[i] || '✓')+'</div>' +
+        '<div class="b3-check-texto">'+escapeHtml(texto)+'</div>';
+      checkGrid.appendChild(card);
+    });
+    s1.appendChild(checkGrid);
+    panel.appendChild(s1);
+
+    // --- 2. Materiales: tarjetas con ícono ---
+    var s2 = seccion('Materiales económicos y dónde conseguirlos', '');
+    var matGrid = document.createElement('div');
+    matGrid.className = 'b3-mat-grid';
+    b.materiales.forEach(function(m, i){
+      var card = document.createElement('div');
+      card.className = 'b3-mat-card';
+      card.innerHTML =
+        '<span class="b3-mat-icon">'+(B3_MAT_ICONS[i] || '📦')+'</span>' +
+        '<div class="b3-mat-nombre">'+escapeHtml(m.material)+'</div>' +
+        '<div class="b3-mat-uso">'+escapeHtml(m.para_que)+'</div>' +
+        '<span class="b3-mat-donde">📍 '+escapeHtml(m.donde)+'</span>';
+      matGrid.appendChild(card);
+    });
+    s2.appendChild(matGrid);
+    panel.appendChild(s2);
+
+    // --- 3. Cómo presentar: tarjetas con ícono ---
+    var s3 = seccion('Cómo presentar según el tipo de postre', '');
+    var presGrid = document.createElement('div');
+    presGrid.className = 'b3-pres-grid';
+    b.presentacion.forEach(function(p, i){
+      var card = document.createElement('div');
+      card.className = 'b3-pres-card';
+      card.innerHTML =
+        '<span class="b3-pres-icon">'+(B3_PRES_ICONS[i] || '🍰')+'</span>' +
+        '<div class="b3-pres-titulo">'+escapeHtml(p.titulo)+'</div>' +
+        '<div class="b3-pres-texto">'+escapeHtml(p.texto)+'</div>';
+      presGrid.appendChild(card);
+    });
+    s3.appendChild(presGrid);
+    panel.appendChild(s3);
+
+    // --- 4. Tarjetas: mockup de tarjeta real ---
+    var s4 = seccion('Plantilla de tarjeta de agradecimiento', 'Copiá el texto tal cual, o usalo de base para escribir el tuyo propio.');
+    var tarjetaGrid = document.createElement('div');
+    tarjetaGrid.className = 'b3-tarjeta-grid';
+    b.tarjetas.forEach(function(t, i){
+      var card = document.createElement('div');
+      card.className = 'b3-tarjeta-mock';
+      card.innerHTML =
+        '<span class="b3-tarjeta-ribbon">🎀 '+escapeHtml(B3_TARJETA_ETIQUETA[i] || t.titulo)+'</span>' +
+        '<div class="b3-tarjeta-titulo">'+escapeHtml(t.titulo)+'</div>' +
+        '<div class="b3-tarjeta-texto">"'+escapeHtml(t.texto)+'"</div>';
+      tarjetaGrid.appendChild(card);
+    });
+    s4.appendChild(tarjetaGrid);
+    panel.appendChild(s4);
+
+    return panel;
+  }
+
+  function seccion(titulo, intro){
+    var s = document.createElement('div');
+    s.className = 'seccion';
+    var h = document.createElement('h2');
+    h.textContent = titulo;
+    s.appendChild(h);
+    if(intro){
+      var p = document.createElement('p');
+      p.className = 'intro';
+      p.textContent = intro;
+      s.appendChild(p);
+    }
+    return s;
+  }
+
+  function listaCheck(items){
+    var ul = document.createElement('ul');
+    ul.className = 'lista-check';
+    items.forEach(function(it){
+      var li = document.createElement('li');
+      li.textContent = it;
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+
+  function itemBlock(titulo, texto){
+    var d = document.createElement('div');
+    d.className = 'item-block';
+    d.innerHTML = '<div class="item-titulo">'+escapeHtml(titulo)+'</div><div class="item-texto">'+escapeHtml(texto)+'</div>';
+    return d;
+  }
+
+  function escapeHtml(str){
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // Si ya había una sesión guardada, entra directo sin pedir contraseña de nuevo
+  (function intentarSesionGuardada(){
+    var token = localStorage.getItem('pdo_token');
+    if(!token) return;
+
+    document.getElementById('vistaLogin').innerHTML = '<p class="loading">Cargando tu cuenta...</p>';
+
+    fetch(SCRIPT_URL + '?action=sesion', { method: 'POST', body: JSON.stringify({token: token}) })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(!data.ok){
+          localStorage.removeItem('pdo_token');
+          localStorage.removeItem('pdo_email');
+          location.reload();
+          return;
+        }
+        mostrarCuenta(data.email, data.productos);
+      })
+      .catch(function(){ location.reload(); });
+  })();
+</script>
+</body>
+</html>
