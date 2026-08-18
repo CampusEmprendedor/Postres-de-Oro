@@ -18,16 +18,18 @@
 <meta name="twitter:image" content="https://triunfar-market.github.io/Recetas-cocina/og-image.jpg">
 <style>
   :root{
-    --gold:#d4a24e;
-    --gold-dark:#b8842f;
-    --choco:#3a2318;
-    --choco-soft:#5a3c2a;
-    --cream:#fff8f0;
-    --pink:#e0668a;
-    --green:#2e8b57;
+    --gold:#eaa42e;
+    --gold-dark:#c9781a;
+    --choco:#331c10;
+    --choco-soft:#5c3a22;
+    --cream:#fff6e6;
+    --pink:#ff5d7d;
+    --green:#1fa056;
     --gray:#6b6259;
+    --cta:#ff5a36;
+    --cta-dark:#e63e1c;
     --radius:16px;
-    --shadow:0 10px 30px rgba(58,35,24,.12);
+    --shadow:0 10px 30px rgba(58,35,24,.14);
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{
@@ -56,11 +58,11 @@
     transition:transform .15s ease, box-shadow .15s ease;
   }
   .btn-primary{
-    background:linear-gradient(135deg,var(--gold),var(--gold-dark));
-    color:#2a1a10;
-    box-shadow:0 8px 20px rgba(184,132,47,.4);
+    background:linear-gradient(135deg,var(--cta),var(--cta-dark));
+    color:#fff;
+    box-shadow:0 8px 20px rgba(230,62,28,.45);
   }
-  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(184,132,47,.5);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(230,62,28,.55);}
   .btn-wide{display:block;width:100%;}
   .btn-sub{display:block;text-align:center;font-size:.82rem;color:var(--gray);margin-top:10px;}
 
@@ -255,12 +257,12 @@
   }
   @keyframes offerPulse{
     0%,100%{ transform:scale(1); box-shadow:0 16px 40px rgba(58,35,24,.18); border-color:var(--gold); }
-    50%{ transform:scale(1.018); box-shadow:0 20px 52px rgba(212,162,78,.45); border-color:var(--gold-dark); }
+    50%{ transform:scale(1.018); box-shadow:0 20px 52px rgba(234,164,46,.5); border-color:var(--gold-dark); }
   }
   .offer-box .btn-primary{ animation:offerBtnPulse 2.4s ease-in-out infinite; }
   @keyframes offerBtnPulse{
-    0%,100%{ box-shadow:0 8px 20px rgba(184,132,47,.4); }
-    50%{ box-shadow:0 10px 28px rgba(184,132,47,.75); }
+    0%,100%{ box-shadow:0 8px 20px rgba(255,90,54,.45); }
+    50%{ box-shadow:0 10px 28px rgba(255,90,54,.8); }
   }
   @media(prefers-reduced-motion:reduce){
     .offer-box, .offer-box .btn-primary{ animation:none; }
