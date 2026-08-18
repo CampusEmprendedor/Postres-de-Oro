@@ -84,6 +84,8 @@
   .foto-usuario-vacia{font-size:.82rem;color:var(--gray);font-style:italic;}
   .btn-foto{display:inline-block;padding:10px 18px;border-radius:50px;font-weight:700;font-size:.85rem;text-align:center;cursor:pointer;border:2px solid var(--gold-dark);background:#fff;color:var(--gold-dark);}
   .btn-foto:disabled{opacity:.6;cursor:default;}
+  .foto-usuario-consent{display:flex;align-items:flex-start;gap:8px;font-size:.8rem;color:var(--gray);margin-top:12px;cursor:pointer;}
+  .foto-usuario-consent input{margin-top:2px;flex-shrink:0;width:auto;margin-bottom:0;}
   .foto-usuario-msg{font-size:.8rem;margin-top:8px;display:none;}
   .foto-usuario-msg.visible{display:block;}
   .foto-usuario-msg.ok-msg{color:#1a7a45;}
@@ -476,7 +478,11 @@
           '</ul></div>';
       }
 
-      var fotoGuardada = fotos[r.num] || fotos[String(r.num)] || '';
+      // fotos[num] puede venir como { url, autorizado } (formato nuevo) o,
+      // por compatibilidad con datos viejos, directo como el string de la url.
+      var fotoInfo = fotos[r.num] || fotos[String(r.num)] || null;
+      var fotoGuardada = fotoInfo ? (typeof fotoInfo === 'string' ? fotoInfo : fotoInfo.url) : '';
+      var fotoAutorizada = fotoInfo && typeof fotoInfo === 'object' ? !!fotoInfo.autorizado : false;
       var subeFotoHtml =
         '<div class="foto-usuario-box" id="fotoBox-'+r.num+'">' +
           '<h4>📸 Tu foto de esta receta</h4>' +
@@ -490,6 +496,10 @@
           '<button type="button" class="btn-foto" id="fotoBtn-'+r.num+'" onclick="document.getElementById(\'fotoInput-'+r.num+'\').click()">' +
             (fotoGuardada ? 'Cambiar foto' : 'Subir mi foto') +
           '</button>' +
+          '<label class="foto-usuario-consent">' +
+            '<input type="checkbox" id="fotoAutoriza-'+r.num+'"' + (fotoAutorizada ? ' checked' : '') + '>' +
+            ' Autorizo a que usen mi foto en las redes sociales de Postres de Oro' +
+          '</label>' +
           '<div class="foto-usuario-msg" id="fotoMsg-'+r.num+'"></div>' +
         '</div>';
 
@@ -996,9 +1006,11 @@
         return;
       }
       var token = localStorage.getItem('pdo_token');
+      var checkAutoriza = document.getElementById('fotoAutoriza-'+num);
+      var autorizado = !!(checkAutoriza && checkAutoriza.checked);
       fetch(SCRIPT_URL + '?action=subirFoto', {
         method: 'POST',
-        body: JSON.stringify({ token: token, num: num, imagen: base64, mimeType: mimeType })
+        body: JSON.stringify({ token: token, num: num, imagen: base64, mimeType: mimeType, autorizado: autorizado })
       })
         .then(function(r){ return r.json(); })
         .then(function(data){
