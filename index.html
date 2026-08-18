@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es-AR">
 <head>
@@ -245,6 +246,7 @@
   .stats-row .label{color:var(--gray);font-size:.85rem;}
 
   /* ---------- Oferta ---------- */
+  #oferta{scroll-margin-top:80px;}
   .offer-box{
     max-width:560px;margin:0 auto;background:#fff;border-radius:20px;
     box-shadow:0 16px 40px rgba(58,35,24,.18);padding:40px 34px;text-align:center;
@@ -364,9 +366,62 @@
   .modal-box input:focus{outline:2px solid var(--gold);border-color:var(--gold);}
   .modal-box .btn{width:100%;margin-top:22px;justify-content:center;}
   .modal-box .modal-note{font-size:.72rem;color:var(--gray);text-align:center;margin-top:10px;}
+
+  /* ---------- Barra de urgencia superior ---------- */
+  .urgency-bar{
+    background:linear-gradient(135deg,#c0392b,#a5281a);
+    color:#fff;text-align:center;padding:10px 14px;font-size:.85rem;font-weight:700;
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;
+  }
+  .urgency-bar .countdown{
+    display:inline-flex;gap:2px;background:rgba(0,0,0,.25);padding:4px 10px;border-radius:8px;
+    font-family:Georgia,serif;font-variant-numeric:tabular-nums;
+  }
+  @media(max-width:560px){ .urgency-bar{font-size:.75rem;padding:8px 10px;} }
+
+  /* ---------- Insignias de escasez ---------- */
+  .scarcity-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:18px;}
+  .scarcity-badge{
+    background:#fde3df;color:#c0392b;font-size:.7rem;font-weight:700;
+    padding:5px 12px;border-radius:20px;letter-spacing:.3px;
+  }
+
+  /* ---------- Contador de gente viendo ---------- */
+  .live-viewers{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    font-size:.85rem;color:var(--choco-soft);margin-bottom:18px;
+  }
+  .live-dot{width:8px;height:8px;border-radius:50%;background:#2ecc71;display:inline-block;animation:pulseDot 1.4s infinite;}
+  @keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(46,204,113,.6);}70%{box-shadow:0 0 0 8px rgba(46,204,113,0);}100%{box-shadow:0 0 0 0 rgba(46,204,113,0);}}
+
+  /* ---------- Countdown dentro de la oferta ---------- */
+  .offer-countdown{
+    background:#fdf1de;border-radius:12px;padding:12px 16px;margin:18px 0;
+    text-align:center;font-size:.85rem;color:var(--choco-soft);
+  }
+  .offer-countdown .countdown{
+    font-family:Georgia,serif;font-weight:700;color:#c0392b;font-size:1.15rem;font-variant-numeric:tabular-nums;
+  }
+
+  /* ---------- Logos / medios de pago ---------- */
+  .payment-badges{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .payment-badges span{
+    background:#f5ede0;color:var(--choco-soft);font-size:.74rem;font-weight:700;
+    padding:6px 12px;border-radius:8px;border:1px solid #e6d5bb;
+  }
+
+  /* ---------- Caja "recuperás tu inversión" ---------- */
+  .roi-box{
+    max-width:560px;margin:22px auto 0;background:#fff8f0;border-left:4px solid var(--gold);
+    border-radius:10px;padding:18px 22px;text-align:center;font-style:italic;color:var(--choco-soft);font-size:.95rem;
+  }
 </style>
 </head>
 <body>
+
+<div class="urgency-bar">
+  🔥 OFERTA EXCLUSIVA DE HOY — termina en <span class="countdown" id="countdownTop">15:00</span>
+</div>
 
 <header>
   <div class="container">
@@ -617,11 +672,18 @@
   <div class="container">
     <h2 class="section-title">Empezá hoy mismo</h2>
     <p class="section-sub">Acceso completo a Postres de Oro + los 3 bonos de regalo.</p>
+    <div class="scarcity-row">
+      <span class="scarcity-badge">⚡ ÚLTIMOS CUPOS</span>
+      <span class="scarcity-badge">🔥 OFERTA LIMITADA</span>
+      <span class="scarcity-badge">⏳ ÚLTIMA OPORTUNIDAD</span>
+    </div>
+    <div class="live-viewers"><span class="live-dot"></span> <span id="liveViewersCount">27</span> personas viendo esta página ahora</div>
     <div class="offer-box">
       <span class="offer-badge">🔥 Oferta por tiempo limitado</span>
       <div class="price-old">Antes $45.500 ARS</div>
       <div class="price-new">$17.999 <small>ARS</small></div>
       <div class="price-save">Ahorrás $27.501 (60% OFF)</div>
+      <div class="offer-countdown">Este precio vuelve a $45.500 en <span class="countdown" id="countdownOferta">15:00</span></div>
       <ul class="offer-includes">
         <li><span class="check">✓</span> Las 32 recetas + guía de costos y precios, en tu cuenta personal</li>
         <li><span class="check">✓</span> Bono 1: Guía para vender por redes sociales</li>
@@ -632,7 +694,11 @@
       <button type="button" class="btn btn-primary btn-wide" onclick="abrirModalCompra()">Quiero acceder ahora</button>
       <p class="payment-note">Pago único · Sin suscripciones · Tarjeta, débito o efectivo</p>
       <p class="payment-note">🔒 Pago 100% seguro, procesado por Mercado Pago</p>
+      <div class="payment-badges">
+        <span>Mercado Pago</span><span>Visa</span><span>Mastercard</span><span>Débito</span>
+      </div>
     </div>
+    <div class="roi-box">"Con vender un solo postre de estas recetas ya recuperás lo que invertiste en el recetario completo."</div>
   </div>
 </section>
 
@@ -779,6 +845,39 @@
       });
     }
   });
+</script>
+
+<script>
+  // Cuenta regresiva de urgencia (se reinicia sola al llegar a cero)
+  (function(){
+    function iniciarCountdown(id, minutosIniciales){
+      var el = document.getElementById(id);
+      if(!el) return;
+      var totalSeg = minutosIniciales * 60;
+      function tick(){
+        var m = Math.floor(totalSeg / 60);
+        var s = totalSeg % 60;
+        el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+        totalSeg--;
+        if(totalSeg < 0) totalSeg = minutosIniciales * 60;
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+    iniciarCountdown('countdownTop', 15);
+    iniciarCountdown('countdownOferta', 15);
+  })();
+
+  // Contador de "personas viendo" (fluctúa levemente para dar sensación de actividad)
+  (function(){
+    var el = document.getElementById('liveViewersCount');
+    if(!el) return;
+    function actualizar(){
+      el.textContent = 22 + Math.floor(Math.random() * 24); // entre 22 y 45
+    }
+    actualizar();
+    setInterval(actualizar, 9000);
+  })();
 </script>
 
 </body>
