@@ -1028,9 +1028,7 @@ src="https://www.facebook.com/tr?id=1598444541795111&ev=PageView&noscript=1"
     <div class="scarcity-row">
       <span class="scarcity-badge">🔥 OFERTA LIMITADA</span>
     </div>
-    <div class="live-viewers"><span class="live-dot"></span> <span id="liveViewersCount">27</span> personas viendo esta página ahora</div>
-    <div class="cupos-counter"><span>⚡ Quedan <span id="cuposCount">7</span> de <span id="cuposTotal">10</span> cupos a este precio</span></div>
-    <div class="cupos-bar-wrap"><div class="cupos-bar-fill" id="cuposBarFill"></div></div>
+    <p class="payment-note" style="margin:0 0 18px;font-size:.85rem;">✅ Acceso a tu cuenta automático apenas se acredita el pago &nbsp;·&nbsp; 🛡️ Garantía de 7 días &nbsp;·&nbsp; 🔒 Pago procesado por Mercado Pago</p>
     <div class="offer-box">
       <span class="offer-badge">🔥 Oferta por tiempo limitado</span>
       <div class="price-old">Antes $45.500 ARS</div>
@@ -1135,14 +1133,6 @@ src="https://www.facebook.com/tr?id=1598444541795111&ev=PageView&noscript=1"
     <p>© 2026 Postres de Oro. Todos los derechos reservados.</p>
   </div>
 </footer>
-
-<div class="toast-compra" id="toastCompra">
-  <div class="avatar" id="toastAvatar">M</div>
-  <div class="txt">
-    <div><strong id="toastNombre">María G.</strong> de <span id="toastLugar">Rosario</span> acaba de comprar</div>
-    <div class="time" id="toastTiempo">hace 3 minutos</div>
-  </div>
-</div>
 
 <div class="sticky-buy" id="stickyBuy">
   <div class="info">
@@ -1314,81 +1304,6 @@ src="https://www.facebook.com/tr?id=1598444541795111&ev=PageView&noscript=1"
     iniciarCountdown('countdownOferta', 15);
   })();
 
-  // Contador de "personas viendo" (fluctúa levemente para dar sensación de actividad)
-  (function(){
-    var el = document.getElementById('liveViewersCount');
-    if(!el) return;
-    function actualizar(){
-      el.textContent = 22 + Math.floor(Math.random() * 24); // entre 22 y 45
-    }
-    actualizar();
-    setInterval(actualizar, 9000);
-  })();
-
-  // Contador de "cupos" (baja de a poco, nunca por debajo de 4) + barra visual
-  (function(){
-    var el = document.getElementById('cuposCount');
-    var barFill = document.getElementById('cuposBarFill');
-    if(!el) return;
-    var total = 10;
-    var cupos = 7;
-    function actualizarBarra(){
-      if(!barFill) return;
-      var ocupados = total - cupos;
-      var pct = Math.round((ocupados / total) * 100);
-      barFill.style.width = pct + '%';
-    }
-    actualizarBarra();
-    setInterval(function(){
-      if(Math.random() < 0.35 && cupos > 4){
-        cupos--;
-        el.textContent = cupos;
-        actualizarBarra();
-      }
-    }, 25000);
-  })();
-
-  // Aviso flotante de "última compra"
-  (function(){
-    var toast = document.getElementById('toastCompra');
-    if(!toast) return;
-    // Gente distinta a la de las reseñas (esas ya compraron hace tiempo;
-    // este aviso simula compras recién hechas, así que no se repiten nombres).
-    var compras = [
-      { nombre: 'Rocío A.', lugar: 'Formosa' },
-      { nombre: 'Milagros B.', lugar: 'San Rafael' },
-      { nombre: 'Brenda K.', lugar: 'Río Cuarto' },
-      { nombre: 'Estefanía R.', lugar: 'Villa María' },
-      { nombre: 'Guadalupe S.', lugar: 'Junín' },
-      { nombre: 'Paula M.', lugar: 'San Nicolás' },
-      { nombre: 'Verónica L.', lugar: 'Trelew' },
-      { nombre: 'Lorena D.', lugar: 'Concordia' },
-      { nombre: 'Ayelén F.', lugar: 'Gualeguaychú' },
-      { nombre: 'Constanza P.', lugar: 'Olavarría' },
-      { nombre: 'Mariana T.', lugar: 'Merlo' },
-      { nombre: 'Silvina G.', lugar: 'Ushuaia' }
-    ];
-    var tiempos = ['hace 2 minutos', 'hace 3 minutos', 'hace 5 minutos', 'hace 8 minutos', 'hace 1 minuto'];
-    var idx = 0;
-    var nombreEl = document.getElementById('toastNombre');
-    var lugarEl = document.getElementById('toastLugar');
-    var tiempoEl = document.getElementById('toastTiempo');
-    var avatarEl = document.getElementById('toastAvatar');
-
-    function mostrarToast(){
-      var c = compras[idx % compras.length];
-      idx++;
-      nombreEl.textContent = c.nombre;
-      lugarEl.textContent = c.lugar;
-      avatarEl.textContent = c.nombre.charAt(0);
-      tiempoEl.textContent = tiempos[Math.floor(Math.random() * tiempos.length)];
-      toast.classList.add('visible');
-      setTimeout(function(){ toast.classList.remove('visible'); }, 5500);
-    }
-
-    setTimeout(mostrarToast, 6000);
-    setInterval(mostrarToast, 21000);
-  })();
 </script>
 
 </body>
