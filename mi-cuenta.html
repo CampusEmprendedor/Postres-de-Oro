@@ -143,6 +143,31 @@
   .b1-foto-titulo{font-weight:700;font-size:.85rem;color:var(--choco);margin-bottom:4px;}
   .b1-foto-texto{font-size:.8rem;color:var(--choco-soft);line-height:1.4;}
 
+  /* ---------- Bono 1 ampliado: escalar el negocio ---------- */
+  .b1-tip-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.b1-tip-grid{grid-template-columns:1fr;}}
+  .b1-tip-card{background:var(--cream);border:1px solid #f0e0c5;border-radius:12px;padding:14px;}
+  .b1-tip-icon{font-size:1.4rem;display:block;margin-bottom:6px;}
+  .b1-tip-titulo{font-weight:700;font-size:.87rem;color:var(--choco);margin-bottom:4px;}
+  .b1-tip-texto{font-size:.82rem;color:var(--choco-soft);line-height:1.4;}
+
+  .b1-fase-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media(max-width:640px){.b1-fase-row{grid-template-columns:1fr;}}
+  .b1-fase-card{background:#fff;border:1px solid #f0e0c5;border-radius:12px;overflow:hidden;box-shadow:0 4px 10px rgba(58,35,24,.06);}
+  .b1-fase-top{padding:10px 14px;color:#fff;font-weight:700;font-size:.83rem;display:flex;align-items:center;gap:8px;}
+  .b1-fase-texto{font-size:.8rem;color:var(--choco-soft);padding:12px 14px;line-height:1.4;}
+
+  .b1-obj-card{border-left:4px solid var(--pink);background:var(--cream);border-radius:0 12px 12px 0;padding:12px 16px;margin-bottom:12px;}
+  .b1-obj-card:last-child{margin-bottom:0;}
+  .b1-obj-situacion{font-weight:700;font-size:.85rem;color:var(--choco);margin-bottom:4px;}
+  .b1-obj-respuesta{font-size:.85rem;color:var(--choco-soft);line-height:1.45;}
+
+  .b1-warn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.b1-warn-grid{grid-template-columns:1fr;}}
+  .b1-warn-card{background:#fdf3ef;border:1px solid #f3ddd0;border-radius:12px;padding:14px;display:flex;gap:10px;align-items:flex-start;}
+  .b1-warn-icon{font-size:1.1rem;flex-shrink:0;}
+  .b1-warn-texto{font-size:.85rem;color:var(--choco-soft);line-height:1.4;}
+
   /* ---------- Bono 3: material ilustrativo ---------- */
   .b3-check-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   @media(max-width:560px){.b3-check-grid{grid-template-columns:1fr;}}
@@ -173,6 +198,27 @@
   .b3-tarjeta-ribbon{position:absolute;top:-12px;left:18px;background:var(--gold);color:#2a1a10;font-size:.68rem;font-weight:700;padding:4px 12px;border-radius:20px;box-shadow:0 3px 6px rgba(58,35,24,.15);}
   .b3-tarjeta-titulo{font-size:.75rem;font-weight:700;color:var(--choco-soft);margin-bottom:8px;margin-top:6px;}
   .b3-tarjeta-texto{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:.95rem;color:var(--choco);line-height:1.5;}
+
+  /* ---------- Bono 3 ampliado: packaging avanzado ---------- */
+  .b3-fase-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media(max-width:640px){.b3-fase-row{grid-template-columns:1fr;}}
+  .b3-fase-card{background:#fff;border:1px solid #f0e0c5;border-radius:12px;overflow:hidden;box-shadow:0 4px 10px rgba(58,35,24,.06);}
+  .b3-fase-top{padding:10px 14px;color:#fff;font-weight:700;font-size:.83rem;display:flex;align-items:center;gap:8px;}
+  .b3-fase-texto{font-size:.8rem;color:var(--choco-soft);padding:12px 14px;line-height:1.4;}
+
+  .b3-tip-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.b3-tip-grid{grid-template-columns:1fr;}}
+  .b3-tip-card{background:var(--cream);border:1px solid #f0e0c5;border-radius:12px;padding:14px;}
+  .b3-tip-icon{font-size:1.4rem;display:block;margin-bottom:6px;}
+  .b3-tip-titulo{font-weight:700;font-size:.87rem;color:var(--choco);margin-bottom:4px;}
+  .b3-tip-texto{font-size:.82rem;color:var(--choco-soft);line-height:1.4;}
+
+  .b3-warn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:560px){.b3-warn-grid{grid-template-columns:1fr;}}
+  .b3-warn-card{background:#fdf3ef;border:1px solid #f3ddd0;border-radius:12px;padding:14px;display:flex;gap:10px;align-items:flex-start;}
+  .b3-warn-icon{font-size:1.1rem;flex-shrink:0;}
+  .b3-warn-texto{font-size:.85rem;color:var(--choco-soft);line-height:1.4;}
+
   table{width:100%;border-collapse:collapse;font-size:.82rem;}
   table th{text-align:left;background:var(--cream);padding:8px;font-size:.75rem;color:var(--choco-soft);}
   table td{padding:8px;border-top:1px solid #f0e0c5;vertical-align:top;}
@@ -642,41 +688,84 @@ src="https://www.facebook.com/tr?id=1598444541795111&ev=PageView&noscript=1"
 
     // --- 6. Hashtags y ubicación ---
     var s6 = seccion('Hashtags y ubicación: que te encuentren sin pagar publicidad', 'Tres ajustes simples para aparecer cuando alguien de tu zona busca postres caseros.');
-    s6.appendChild(listaCheck([
-      'Combiná 3 tipos de hashtag en cada posteo: uno genérico (#reposteria, #postres), uno de nicho (#alfajoresartesanales, #posturascaseras) y uno local (#reposteria + tu ciudad o barrio). Con 5-6 bien elegidos alcanza, no hace falta poner 30.',
-      'Etiquetá tu ubicación (barrio o ciudad) en cada publicación e historia — así Instagram te muestra a gente cerca que está buscando justo eso.',
-      'Sumate a grupos de Facebook o WhatsApp de tu barrio, o de «emprendedores/ferias» de tu zona, y publicá ahí también — es alcance gratis, sin pagar nada de publicidad.'
-    ]));
+    var g6 = document.createElement('div');
+    g6.className = 'b1-tip-grid';
+    [
+      ['🏷️','Combiná 3 tipos de hashtag','Uno genérico (#reposteria, #postres), uno de nicho (#alfajoresartesanales, #tortascaseras) y uno local (tu ciudad o barrio). Con 5-6 bien elegidos alcanza, no hace falta poner 30.'],
+      ['📍','Etiquetá tu ubicación','En cada publicación e historia — así Instagram te muestra a gente cerca que está buscando justo eso.'],
+      ['👥','Sumate a grupos locales','Grupos de Facebook o WhatsApp de tu barrio, o de «emprendedores/ferias» de tu zona — es alcance gratis, sin pagar publicidad.']
+    ].forEach(function(t){
+      var c = document.createElement('div');
+      c.className = 'b1-tip-card';
+      c.innerHTML = '<span class="b1-tip-icon">'+t[0]+'</span><div class="b1-tip-titulo">'+escapeHtml(t[1])+'</div><div class="b1-tip-texto">'+escapeHtml(t[2])+'</div>';
+      g6.appendChild(c);
+    });
+    s6.appendChild(g6);
     panel.appendChild(s6);
 
     // --- 7. Objeciones ---
     var s7 = seccion('Cómo responder objeciones y comentarios', 'Situaciones que te van a pasar seguro, y cómo manejarlas sin perder la venta ni la calma.');
-    s7.appendChild(itemBlock('«Está caro»', 'No bajes el precio de entrada. Explicá el valor (ingredientes, tiempo, hecho a mano) y, si hace falta, ofrecé una opción más chica o económica en vez de descontar la que ya tenés.'));
-    s7.appendChild(itemBlock('Comentario negativo público', 'Respondé siempre con calma y llevá la conversación a un mensaje privado. No lo borres sin más, salvo que sea spam o agresivo — borrar sin responder genera desconfianza en quien lo ve.'));
-    s7.appendChild(itemBlock('Preguntas repetidas (precio, zona de entrega, formas de pago)', 'Fijá («pin») un comentario o guardá una historia destacada con esa info, para no tener que repetirla siempre desde cero.'));
+    [
+      ['«Está caro»', 'No bajes el precio de entrada. Explicá el valor (ingredientes, tiempo, hecho a mano) y, si hace falta, ofrecé una opción más chica o económica en vez de descontar la que ya tenés.'],
+      ['Comentario negativo público', 'Respondé siempre con calma y llevá la conversación a un mensaje privado. No lo borres sin más, salvo que sea spam o agresivo — borrar sin responder genera desconfianza en quien lo ve.'],
+      ['Preguntas repetidas (precio, zona de entrega, formas de pago)', 'Fijá («pin») un comentario o guardá una historia destacada con esa info, para no tener que repetirla siempre desde cero.']
+    ].forEach(function(o){
+      var c = document.createElement('div');
+      c.className = 'b1-obj-card';
+      c.innerHTML = '<div class="b1-obj-situacion">💬 '+escapeHtml(o[0])+'</div><div class="b1-obj-respuesta">'+escapeHtml(o[1])+'</div>';
+      s7.appendChild(c);
+    });
     panel.appendChild(s7);
 
     // --- 8. Escalar: de conocidos a desconocidos ---
     var s8 = seccion('De vender a conocidos a vender a desconocidos', 'Así se ve, en la práctica, el camino típico para hacer crecer el alcance de tu emprendimiento.');
-    s8.appendChild(itemBlock('Fase 1 — Arranque', 'Familia, amigos, compañeros de trabajo o estudio. Pedíles que compartan tu primera publicación, es el empujón inicial que necesita cualquier cuenta nueva.'));
-    s8.appendChild(itemBlock('Fase 2 — Barrio y boca en boca', 'Grupos de Facebook de tu zona, reseñas de clientes conformes, y la tarjeta de agradecimiento del Bono 3 pidiendo que te etiqueten.'));
-    s8.appendChild(itemBlock('Fase 3 — Desconocidos', 'Colaborar con una cuenta más grande de tu zona (canje de producto por posteo), participar en una feria de emprendedores, o — cuando ya tengas el proceso aceitado — evaluar un presupuesto chico de publicidad paga.'));
+    var row8 = document.createElement('div');
+    row8.className = 'b1-fase-row';
+    [
+      ['🌱','Fase 1 — Arranque','var(--choco)','Familia, amigos, compañeros de trabajo o estudio. Pedíles que compartan tu primera publicación, es el empujón inicial que necesita cualquier cuenta nueva.'],
+      ['🏘️','Fase 2 — Boca en boca','var(--gold-dark)','Grupos de Facebook de tu zona, reseñas de clientes conformes, y la tarjeta de agradecimiento del Bono 3 pidiendo que te etiqueten.'],
+      ['🚀','Fase 3 — Desconocidos','var(--pink)','Colaborar con una cuenta más grande de tu zona (canje de producto por posteo), participar en una feria de emprendedores, o evaluar un presupuesto chico de publicidad paga.']
+    ].forEach(function(f){
+      var c = document.createElement('div');
+      c.className = 'b1-fase-card';
+      c.innerHTML = '<div class="b1-fase-top" style="background:'+f[2]+';"><span>'+f[0]+'</span><span>'+escapeHtml(f[1])+'</span></div><div class="b1-fase-texto">'+escapeHtml(f[3])+'</div>';
+      row8.appendChild(c);
+    });
+    s8.appendChild(row8);
     panel.appendChild(s8);
 
     // --- 9. Fidelización ---
     var s9 = seccion('Fidelizá: que te vuelvan a comprar', 'Conseguir un cliente nuevo cuesta mucho más que mantener uno que ya te compró — por eso este paso vale la pena.');
-    s9.appendChild(listaCheck([
-      'Llevá una lista simple (alcanza con las notas del celular) de quién te compró y qué le gustó, para poder ofrecerle algo parecido o avisarle de una novedad.',
-      'Después de cada entrega, mandá el mensaje de seguimiento y pedido de reseña de la sección de mensajes de WhatsApp — no cuesta nada y multiplica las chances de que vuelva.',
-      'Armá un beneficio simple para quien ya te compró antes: por ejemplo, «en tu 5to pedido, el 6to postre chico es gratis». No hace falta nada complejo para que funcione.'
-    ]));
+    var g9 = document.createElement('div');
+    g9.className = 'b1-tip-grid';
+    [
+      ['📝','Llevá un registro simple','Alcanza con las notas del celular: quién te compró y qué le gustó, para ofrecerle algo parecido o avisarle de una novedad.'],
+      ['💌','Seguimiento post-entrega','Mandá el mensaje de seguimiento y pedido de reseña de la sección de WhatsApp — no cuesta nada y multiplica las chances de que vuelva.'],
+      ['🎁','Beneficio para clientes frecuentes','Por ejemplo «en tu 5to pedido, el 6to postre chico es gratis». No hace falta nada complejo para que funcione.']
+    ].forEach(function(t){
+      var c = document.createElement('div');
+      c.className = 'b1-tip-card';
+      c.innerHTML = '<span class="b1-tip-icon">'+t[0]+'</span><div class="b1-tip-titulo">'+escapeHtml(t[1])+'</div><div class="b1-tip-texto">'+escapeHtml(t[2])+'</div>';
+      g9.appendChild(c);
+    });
+    s9.appendChild(g9);
     panel.appendChild(s9);
 
     // --- 10. Cuándo subir precios ---
     var s10 = seccion('Cuándo y cómo subir tus precios', 'Subir el precio da miedo la primera vez, pero es parte normal de crecer un emprendimiento que funciona.');
-    s10.appendChild(itemBlock('Señal de que es momento', 'Tenés más pedidos de los que podés hacer cómoda, o casi nadie pregunta el precio antes de confirmar — ambas cosas indican que estás cobrando por debajo de lo que el mercado paga.'));
-    s10.appendChild(itemBlock('Cómo anunciarlo', 'Avisá con unos días de anticipación a tus clientes habituales. No hace falta justificarte de más — «a partir del [fecha] actualizo mis precios» alcanza y suena profesional.'));
-    s10.appendChild(itemBlock('Usá la calculadora del Bono 2', 'Para confirmar que el precio nuevo te sigue dejando la ganancia que necesitás — no lo definas solo «a ojo» o por lo que se sienta bien.'));
+    var g10 = document.createElement('div');
+    g10.className = 'b1-tip-grid';
+    [
+      ['📈','Señal de que es momento','Tenés más pedidos de los que podés hacer cómoda, o casi nadie pregunta el precio antes de confirmar.'],
+      ['📢','Cómo anunciarlo','Avisá con unos días de anticipación a tus clientes habituales — «a partir del [fecha] actualizo mis precios» alcanza y suena profesional.'],
+      ['🧮','Usá la calculadora del Bono 2','Para confirmar que el precio nuevo te sigue dejando la ganancia que necesitás — no lo definas solo «a ojo».']
+    ].forEach(function(t){
+      var c = document.createElement('div');
+      c.className = 'b1-tip-card';
+      c.innerHTML = '<span class="b1-tip-icon">'+t[0]+'</span><div class="b1-tip-titulo">'+escapeHtml(t[1])+'</div><div class="b1-tip-texto">'+escapeHtml(t[2])+'</div>';
+      g10.appendChild(c);
+    });
+    s10.appendChild(g10);
     panel.appendChild(s10);
 
     // --- 11. Señales de escalar ---
@@ -685,26 +774,45 @@ src="https://www.facebook.com/tr?id=1598444541795111&ev=PageView&noscript=1"
       'Estás rechazando pedidos porque no llegás a hacerlos todos.',
       'Repetís siempre los mismos 2-3 productos que más se venden — podría convenirte enfocarte en esos en vez de ofrecer de todo un poco.'
     ]));
-    s11.appendChild(itemBlock('Próximos pasos posibles', 'Tomar pedidos con más anticipación (por ejemplo, cerrar los pedidos de la semana todos los domingos), sumar a alguien que te ayude en las horas pico, o subir el precio en vez de bajar la calidad para sostener el volumen que ya tenés.'));
+    var tip11 = document.createElement('div');
+    tip11.className = 'tip-box';
+    tip11.innerHTML = '<strong>Próximos pasos posibles:</strong> tomar pedidos con más anticipación (por ejemplo, cerrar los pedidos de la semana todos los domingos), sumar a alguien que te ayude en las horas pico, o subir el precio en vez de bajar la calidad para sostener el volumen que ya tenés.';
+    s11.appendChild(tip11);
     panel.appendChild(s11);
 
     // --- 12. Métricas simples ---
     var s12 = seccion('Qué mirar en tus redes (métricas simples)', 'No hace falta ser experto en analítica — con esto alcanza para saber qué está funcionando.');
-    s12.appendChild(listaCheck([
-      'Cada 2 semanas, revisá qué publicación tuvo más me gusta + comentarios + guardados — eso te dice qué producto o formato conviene repetir.',
-      'El dato que más importa: cuántos mensajes de WhatsApp te llegaron después de cada posteo. Un posteo con muchos «me gusta» pero cero mensajes no te está generando ventas.',
-      'No uses el número de seguidores como métrica principal — importa mucho más cuánta gente te escribe y te compra, no cuánta gente te sigue sin interactuar.'
-    ]));
+    var g12 = document.createElement('div');
+    g12.className = 'b1-tip-grid';
+    [
+      ['📊','Mirá qué funciona cada 2 semanas','Qué publicación tuvo más me gusta + comentarios + guardados — eso te dice qué producto o formato conviene repetir.'],
+      ['💬','El dato que más importa','Cuántos mensajes de WhatsApp te llegaron después de cada posteo. Muchos «me gusta» pero cero mensajes no te está generando ventas.'],
+      ['👥','Los seguidores no son lo principal','Importa mucho más cuánta gente te escribe y te compra, no cuánta gente te sigue sin interactuar.']
+    ].forEach(function(t){
+      var c = document.createElement('div');
+      c.className = 'b1-tip-card';
+      c.innerHTML = '<span class="b1-tip-icon">'+t[0]+'</span><div class="b1-tip-titulo">'+escapeHtml(t[1])+'</div><div class="b1-tip-texto">'+escapeHtml(t[2])+'</div>';
+      g12.appendChild(c);
+    });
+    s12.appendChild(g12);
     panel.appendChild(s12);
 
     // --- 13. Errores comunes ---
     var s13 = seccion('Errores comunes que frenan las ventas', 'Cosas simples de corregir que, sin darte cuenta, te pueden estar costando pedidos.');
-    s13.appendChild(listaCheck([
+    var g13 = document.createElement('div');
+    g13.className = 'b1-warn-grid';
+    [
       'No poner el precio ni cómo pedir en la publicación — obliga a preguntar, y se pierden los clientes con menos paciencia.',
       'Publicar solo «cuando hay ganas» en vez de con un ritmo constante, aunque sea 2 veces por semana.',
       'Fotos oscuras o sacadas con el celular muy lejos del postre.',
       'No responder rápido los mensajes — la mayoría de la gente le escribe a 2 o 3 emprendimientos a la vez, y compra al que responde primero.'
-    ]));
+    ].forEach(function(texto){
+      var c = document.createElement('div');
+      c.className = 'b1-warn-card';
+      c.innerHTML = '<span class="b1-warn-icon">⚠️</span><div class="b1-warn-texto">'+escapeHtml(texto)+'</div>';
+      g13.appendChild(c);
+    });
+    s13.appendChild(g13);
     panel.appendChild(s13);
 
     return panel;
@@ -1008,64 +1116,121 @@ src="https://www.facebook.com/tr?id=1598444541795111&ev=PageView&noscript=1"
 
     // --- 5. Retiro vs. envío ---
     var s5 = seccion('Packaging según cómo se entrega: retiro vs. envío', 'El mismo postre necesita distinta protección según cómo llegue hasta el cliente.');
-    s5.appendChild(itemBlock('Retiro en tu casa', 'Podés usar un packaging más simple y liviano, porque el cliente lo transporta con cuidado y en poco tiempo.'));
-    s5.appendChild(itemBlock('Envío por moto o cadete', 'Base rígida siempre, cinta que selle bien, nada de tapas sueltas — el trayecto tiene vibración, frenadas y giros que un envase mal cerrado no soporta.'));
-    s5.appendChild(itemBlock('Envío más largo (colectivo, mensajería)', 'Evitá rellenos o cremas que se ablanden con el calor si el viaje es largo, y sumá una bolsa extra como segunda protección por si el envase principal se golpea.'));
+    var row5 = document.createElement('div');
+    row5.className = 'b3-fase-row';
+    [
+      ['🏠','Retiro en tu casa','var(--green)','Podés usar un packaging más simple y liviano, porque el cliente lo transporta con cuidado y en poco tiempo.'],
+      ['🛵','Envío por moto o cadete','var(--gold-dark)','Base rígida siempre, cinta que selle bien, nada de tapas sueltas — el trayecto tiene vibración y frenadas que un envase mal cerrado no soporta.'],
+      ['🚌','Envío más largo','var(--choco)','Evitá rellenos que se ablanden con el calor, y sumá una bolsa extra como segunda protección por si el envase principal se golpea.']
+    ].forEach(function(f){
+      var c = document.createElement('div');
+      c.className = 'b3-fase-card';
+      c.innerHTML = '<div class="b3-fase-top" style="background:'+f[2]+';"><span>'+f[0]+'</span><span>'+escapeHtml(f[1])+'</span></div><div class="b3-fase-texto">'+escapeHtml(f[3])+'</div>';
+      row5.appendChild(c);
+    });
+    s5.appendChild(row5);
     panel.appendChild(s5);
 
     // --- 6. Costo del packaging ---
     var s6 = seccion('Cuánto te cuesta realmente el packaging (y cómo cobrarlo)', 'El packaging no es «gratis» aunque no se note en tu margen si no lo calculás.');
-    s6.appendChild(listaCheck([
-      'Sumá el costo de caja + bolsa + etiqueta + cinta al costo de cada pedido antes de fijar el precio — usá la calculadora del Bono 2 para no dejarlo afuera de la cuenta.',
-      'Para pedidos grandes o eventos, un packaging especial se puede cobrar aparte como un adicional — no tiene por qué salir de tu ganancia.',
-      'Revisá este costo cada tanto: los precios de cajas, bolsas y cintas también suben, y si no lo actualizás, se va comiendo margen sin que te des cuenta.'
-    ]));
+    var g6 = document.createElement('div');
+    g6.className = 'b3-tip-grid';
+    [
+      ['🧮','Sumalo al costo de cada pedido','Caja + bolsa + etiqueta + cinta, antes de fijar el precio — usá la calculadora del Bono 2 para no dejarlo afuera.'],
+      ['💰','Cobralo aparte en pedidos grandes','Un packaging especial para eventos se puede cobrar como adicional — no tiene por qué salir de tu ganancia.'],
+      ['📈','Revisalo cada tanto','Los precios de cajas, bolsas y cintas también suben, y si no lo actualizás, se va comiendo margen sin que te des cuenta.']
+    ].forEach(function(t){
+      var c = document.createElement('div');
+      c.className = 'b3-tip-card';
+      c.innerHTML = '<span class="b3-tip-icon">'+t[0]+'</span><div class="b3-tip-titulo">'+escapeHtml(t[1])+'</div><div class="b3-tip-texto">'+escapeHtml(t[2])+'</div>';
+      g6.appendChild(c);
+    });
+    s6.appendChild(g6);
     panel.appendChild(s6);
 
     // --- 7. Packaging premium ---
-    var s7 = seccion('Packaging premium: una forma fácil de subir el ticket promedio', 'Ofrecer una opción de presentación superior es una de las formas más simples de vender más sin bajar precios.');
-    s7.appendChild(listaCheck([
-      'Armá una versión «regalo» opcional (caja más linda, moño, tarjeta personalizada) por un adicional fijo — mucha gente la pide si se la mostrás como opción clara, sin que tengas que insistir.',
-      'Ejemplo de cómo ofrecerlo por WhatsApp: «¿Querés que te lo arme en presentación de regalo por $[monto] extra? Incluye caja especial y tarjeta con dedicatoria.»',
-      'No hace falta ofrecerlo en todos los pedidos — alcanza con mencionarlo una vez, al confirmar, para que quien lo quiera lo pida.'
-    ]));
+    var s7 = seccion('Packaging premium: una forma fácil de subir el ticket promedio', 'Ofrecer una opción de presentación superior es una de las formas más simples de vender más sin bajar precios. Armá una versión «regalo» opcional (caja más linda, moño, tarjeta personalizada) por un adicional fijo.');
+    var chat7 = document.createElement('div');
+    chat7.className = 'b1-chat';
+    chat7.innerHTML =
+      '<div class="b1-bubble-wrap">' +
+        '<div class="b1-bubble-titulo">Así lo podés ofrecer por WhatsApp</div>' +
+        '<div class="b1-bubble">¿Querés que te lo arme en presentación de regalo por $[monto] extra? Incluye caja especial y tarjeta con dedicatoria.<span class="b1-bubble-check">✓✓</span></div>' +
+      '</div>';
+    s7.appendChild(chat7);
+    var nota7 = document.createElement('p');
+    nota7.style.cssText = 'font-size:.82rem;color:var(--gray);margin-top:14px;';
+    nota7.textContent = 'No hace falta ofrecerlo en todos los pedidos: alcanza con mencionarlo una vez, al confirmar, para que quien lo quiera lo pida.';
+    s7.appendChild(nota7);
     panel.appendChild(s7);
 
     // --- 8. Kit de marca ---
     var s8 = seccion('Armá tu kit de marca: que te reconozcan de un vistazo', 'No hace falta un logo profesional para que tu emprendimiento se vea consistente.');
-    s8.appendChild(listaCheck([
-      'Elegí 1 o 2 colores y usalos siempre — en la etiqueta, la cinta, el moño. La repetición es lo que genera reconocimiento, no la complejidad del diseño.',
-      'Un sticker simple con tu nombre o usuario de Instagram en cada pedido funciona como una mini publicidad que viaja con el postre a donde vaya.',
-      'Si cambiás de proveedor de cajas o bolsas, tratá de mantener el mismo color o estilo — los cambios constantes hacen que cueste más que te identifiquen.'
-    ]));
+    var g8 = document.createElement('div');
+    g8.className = 'b3-tip-grid';
+    [
+      ['🎨','Elegí 1 o 2 colores','Y usalos siempre: en la etiqueta, la cinta, el moño. La repetición genera reconocimiento, no la complejidad del diseño.'],
+      ['🏷️','Sumá un sticker con tu usuario','En cada pedido funciona como una mini publicidad que viaja con el postre a donde vaya.'],
+      ['📦','Mantené el mismo estilo','Si cambiás de proveedor de cajas o bolsas, tratá de conservar el color — los cambios constantes hacen que cueste más que te identifiquen.']
+    ].forEach(function(t){
+      var c = document.createElement('div');
+      c.className = 'b3-tip-card';
+      c.innerHTML = '<span class="b3-tip-icon">'+t[0]+'</span><div class="b3-tip-titulo">'+escapeHtml(t[1])+'</div><div class="b3-tip-texto">'+escapeHtml(t[2])+'</div>';
+      g8.appendChild(c);
+    });
+    s8.appendChild(g8);
     panel.appendChild(s8);
 
     // --- 9. Pedidos grandes / eventos ---
     var s9 = seccion('Packaging para pedidos grandes y eventos', 'Los pedidos de cumpleaños, catering o eventos tienen su propia lógica de organización.');
-    s9.appendChild(listaCheck([
-      'Numerá o etiquetá cada caja si hay varios sabores o tamaños, para que la entrega sea rápida y sin errores el día del evento.',
-      'Llevá 1 o 2 cajas de repuesto vacías para imprevistos — una que se dañe en el camino, o un cliente que pide separar algo en el momento.',
-      'Para tortas centrales de cumpleaños o eventos, preguntá si necesita transporte especial (mejor en auto, con la torta fija y plana, que en moto).'
-    ]));
+    var g9 = document.createElement('div');
+    g9.className = 'b3-tip-grid';
+    [
+      ['🔢','Numerá cada caja','Si hay varios sabores o tamaños, para que la entrega sea rápida y sin errores el día del evento.'],
+      ['📦','Llevá cajas de repuesto','1 o 2 vacías para imprevistos: una que se dañe en el camino, o un pedido de último momento.'],
+      ['🚗','Preguntá por el transporte','Para tortas centrales, mejor en auto, con la torta fija y plana, que en moto.']
+    ].forEach(function(t){
+      var c = document.createElement('div');
+      c.className = 'b3-tip-card';
+      c.innerHTML = '<span class="b3-tip-icon">'+t[0]+'</span><div class="b3-tip-titulo">'+escapeHtml(t[1])+'</div><div class="b3-tip-texto">'+escapeHtml(t[2])+'</div>';
+      g9.appendChild(c);
+    });
+    s9.appendChild(g9);
     panel.appendChild(s9);
 
     // --- 10. Errores comunes ---
     var s10 = seccion('Errores de packaging que hacen perder clientes', 'Detalles chicos que, sin querer, pueden arruinar una buena primera impresión.');
-    s10.appendChild(listaCheck([
+    var g10 = document.createElement('div');
+    g10.className = 'b3-warn-grid';
+    [
       'Envase transpirado o con condensación por guardar en frío y sacarlo de golpe al calor.',
       'Rellenos que se filtran por un envase mal cerrado — revisá siempre antes de entregar.',
       'Faltar el aviso de alérgenos: además de ser una buena práctica, evita reclamos serios más adelante.',
       'Packaging desprolijo justo en la primera compra de un cliente nuevo — la primera impresión pesa mucho más que en una compra repetida.'
-    ]));
+    ].forEach(function(texto){
+      var c = document.createElement('div');
+      c.className = 'b3-warn-card';
+      c.innerHTML = '<span class="b3-warn-icon">⚠️</span><div class="b3-warn-texto">'+escapeHtml(texto)+'</div>';
+      g10.appendChild(c);
+    });
+    s10.appendChild(g10);
     panel.appendChild(s10);
 
     // --- 11. Packaging sustentable ---
     var s11 = seccion('Packaging sustentable (un diferencial de marca opcional)', 'No es obligatorio, pero cada vez más clientes lo valoran y lo podés usar como parte de tu identidad.');
-    s11.appendChild(listaCheck([
-      'Cajas de cartón reciclable y bolsas de papel en vez de plástico, cuando el postre lo permite.',
-      'Ofrecer «devolvé el envase y te descuento en el próximo pedido» si usás potes reutilizables — reduce tu costo de materiales y además genera que el cliente vuelva a comprarte.',
-      'Si sumás esto, contalo en tus redes (Bono 1) — es un buen contenido para publicar y diferenciarte de otros emprendimientos de la zona.'
-    ]));
+    var g11 = document.createElement('div');
+    g11.className = 'b3-tip-grid';
+    [
+      ['♻️','Cartón reciclable y papel','En vez de plástico, cuando el postre lo permite.'],
+      ['🔄','Devolvé el envase, sumá un descuento','Si usás potes reutilizables, reduce tu costo de materiales y genera que el cliente vuelva a comprarte.'],
+      ['📱','Contalo en tus redes','Es un buen contenido para publicar (ver Bono 1) y te diferencia de otros emprendimientos de la zona.']
+    ].forEach(function(t){
+      var c = document.createElement('div');
+      c.className = 'b3-tip-card';
+      c.innerHTML = '<span class="b3-tip-icon">'+t[0]+'</span><div class="b3-tip-titulo">'+escapeHtml(t[1])+'</div><div class="b3-tip-texto">'+escapeHtml(t[2])+'</div>';
+      g11.appendChild(c);
+    });
+    s11.appendChild(g11);
     panel.appendChild(s11);
 
     return panel;
