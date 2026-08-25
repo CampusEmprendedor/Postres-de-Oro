@@ -1153,7 +1153,7 @@ src="https://www.facebook.com/tr?id=1598444541795111&ev=PageView&noscript=1"
   <button type="button" class="btn btn-primary" onclick="abrirModalCompra()">Comprar ahora</button>
 </div>
 
-<!-- Modal: pide email y ubicación antes de ir a pagar. El email queda como usuario de la cuenta. -->
+<!-- aModal: pide email antes de ir a pagar. El email queda como usuario de la cuenta. -->
 <div class="modal-overlay" id="modalCompra">
   <div class="modal-box">
     <button type="button" class="modal-close" onclick="cerrarModalCompra()" aria-label="Cerrar">✕</button>
@@ -1163,8 +1163,6 @@ src="https://www.facebook.com/tr?id=1598444541795111&ev=PageView&noscript=1"
     <form id="formCompra" onsubmit="return irAPagar(event)">
       <label for="inputEmail">Email</label>
       <input type="email" id="inputEmail" name="email" placeholder="tu@email.com" autocomplete="email" required>
-      <label for="inputUbicacion">Ubicación (ciudad y país)</label>
-      <input type="text" id="inputUbicacion" name="ubicacion" placeholder="Ej: Rosario, Argentina">
       <button type="submit" class="btn btn-primary" id="btnIrAPagar">Ir a pagar →</button>
       <p class="modal-note">🔒 El pago lo hacés después, directo en Mercado Pago.</p>
     </form>
@@ -1217,15 +1215,14 @@ src="https://www.facebook.com/tr?id=1598444541795111&ev=PageView&noscript=1"
   function irAPagar(ev){
     ev.preventDefault();
     var email = document.getElementById('inputEmail').value.trim();
-    var ubicacion = document.getElementById('inputUbicacion').value.trim();
-    if(!email || !ubicacion) return false;
+    if(!email) return false;
 
     var btn = document.getElementById('btnIrAPagar');
     btn.disabled = true;
     btn.textContent = 'Preparando el pago...';
     document.getElementById('errorCompra').style.display = 'none';
 
-    fetch(SCRIPT_URL + '?action=comprar', { method: 'POST', body: JSON.stringify({ email: email, ubicacion: ubicacion }) })
+    fetch(SCRIPT_URL + '?action=comprar', { method: 'POST', body: JSON.stringify({ email: email }) })
       .then(function(r){ return r.json(); })
       .then(function(data){
         if(!data.ok){
